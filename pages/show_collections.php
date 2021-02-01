@@ -4,7 +4,7 @@ if(!isset($_SESSION['route']))
     die('Direct Access is forbidden');
 
 ?>
-<div style='width:80%;margin-left:10%; overflow:auto;'>		
+<div style='width:80%;margin-left:10%;  background:#000;opacity:0.8;overflow:auto;'>		
 <div style='margin:5px;position:absolute;right:10%;'>
         <a id='left_collect' class='collect-nav'><i class="fa fa-chevron-circle-left nav-left-right"></i></a>
         <a id='right_collect'  class='collect-nav'><i class="fa fa-chevron-circle-right nav-left-right"></i></a>
@@ -70,5 +70,17 @@ if(!isset($_SESSION['route']))
         }});
     });
     
-    
+    $("#collections_div").on('click', '.select-picture',function() {
+        var rom = $(this).attr("data");
+        $.ajax({url: "./gamepage.php", 
+            data : {
+                "rom" : rom					
+            },
+            type : "post",
+            success: function(result){
+                $("#main_body").html(result);	
+                let rom_path = $("#hid_path").val();
+                loadfileName(rom_path);				
+        }});       
+    })
 </script>

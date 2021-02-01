@@ -36,7 +36,7 @@ $result = mysqli_query($mysql_db, $sql);
     cursor:pointer;
 }
 </style>
-<div style='background:#fff; margin:20px; opacity:0.9;'>
+<div style='margin:20px; opacity:0.9;'>
     <div style='padding:20px;overflow:hidden'>
         <table id="exampleg" class="table table-striped table-bordered nowrap" style='width:100%'>
             <thead>

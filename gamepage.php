@@ -66,17 +66,22 @@ imagejpeg($resized, "RESIZED.jpg");
     $rompath = ($full_rom == "") ? $demo_rom : $full_rom;
 
 ?>
-<style>
-    .game-font {
-        font-weight:bold;
-        color:#ddd;
-    }
-</style>
 <input type='hidden' id='hid_path' value='<?php echo $rompath;?>'/>
 <div class='row'>
     <div class='col-md-5 col-76812' style='padding:30px;'>
         <div>
-        <span style='font-size:32px;' class='game-font'><?php echo $gamename;?></span>
+        <span style='font-size:32px;' class='game-font'><?php echo $gamename;?></span>&nbsp;&nbsp;
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn"><i class='fa fa-angle-down'></i>&nbsp;Options</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a>Rate this game</a>
+                    <a>Leave feedback</a>
+                    <a>Add to favorite</a>
+                    <a>Report</a>
+                    <a>Share with Social</a>
+                    <a>Get game link</a>
+                </div>
+            </div>
         </div>
         <div style='padding-top:5px;'>
         <span style='font-size:16px;' class='game-font'><?php echo $developer.", ".$yy;?></span>
@@ -151,15 +156,7 @@ imagejpeg($resized, "RESIZED.jpg");
             </div>
             <i class="fas fa-volume-off"></i>
             <input type="range" min="0" max="100" value="50" oninput="emu.volume(this.value / 100); config.volume = this.value; save(); this.focus()">
-            <div title="Enable SNES mouse" class="button" onclick="emu.useMouse()">
-                <img src="assets/img/mouse.svg">
-            </div>
-            <div title="Configure controller buttons" class="button controller" onclick="emu.buttonConfig()">
-                <img src="assets/img/controller.svg">
-            </div>
-            <div title="Toggle TV shader (might be slow)" class="button shader" onclick="toggleShader()">
-                <img src="assets/img/tv.svg">
-            </div>
+            
             <div title="Full screen" class="button" onclick="fullscreen()">
                 <img src="assets/img/fullscreen.svg">
             </div>
@@ -174,4 +171,21 @@ imagejpeg($resized, "RESIZED.jpg");
     $("#get_demo").on("click", function() {
         $("#download_frame").attr("src","./download.php?g=demo&i=<?php echo $packrom;?>");
     });
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+        }
+        }
+    }
+    }
 </script>

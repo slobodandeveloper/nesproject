@@ -8,81 +8,81 @@ $tablepages = getTablePagesCount();
 $allcount = getAllGameCount();
 ?>
 <div style='width:80%;margin-left:10%; background:#000;opacity:0.8;overflow:auto;'>
-<div class="s007">
-    <form>
-    <div class="inner-form">
-        <div class="basic-search">
-        <div class="input-field">
-            <div class="icon-wrap">              
-            <svg style='cursor:pointer' id='basic_search_btn' version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
-                <path d="M18.869 19.162l-5.943-6.484c1.339-1.401 2.075-3.233 2.075-5.178 0-2.003-0.78-3.887-2.197-5.303s-3.3-2.197-5.303-2.197-3.887 0.78-5.303 2.197-2.197 3.3-2.197 5.303 0.78 3.887 2.197 5.303 3.3 2.197 5.303 2.197c1.726 0 3.362-0.579 4.688-1.645l5.943 6.483c0.099 0.108 0.233 0.162 0.369 0.162 0.121 0 0.242-0.043 0.338-0.131 0.204-0.187 0.217-0.503 0.031-0.706zM1 7.5c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5-6.5-2.916-6.5-6.5z"></path>
-            </svg>               
+    <div class="s007">
+        <form>
+        <div class="inner-form">
+            <div class="basic-search">
+            <div class="input-field">
+                <div class="icon-wrap">              
+                <svg style='cursor:pointer' id='basic_search_btn' version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                    <path d="M18.869 19.162l-5.943-6.484c1.339-1.401 2.075-3.233 2.075-5.178 0-2.003-0.78-3.887-2.197-5.303s-3.3-2.197-5.303-2.197-3.887 0.78-5.303 2.197-2.197 3.3-2.197 5.303 0.78 3.887 2.197 5.303 3.3 2.197 5.303 2.197c1.726 0 3.362-0.579 4.688-1.645l5.943 6.483c0.099 0.108 0.233 0.162 0.369 0.162 0.121 0 0.242-0.043 0.338-0.131 0.204-0.187 0.217-0.503 0.031-0.706zM1 7.5c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5-6.5-2.916-6.5-6.5z"></path>
+                </svg>               
+                </div>
+                <input type="text" id='search_name'  placeholder="Search game..." />
+                <div class="result-count">
+                <span id='searched_count'><?php echo $allcount;?></span>results 
+                <i class='fa fa-cog' style='padding:5px;cursor:pointer;font-size: 20px;' data-toggle="modal" data-target="#exampleModal" ></i>               
+                </div>
             </div>
-            <input type="text" id='search_name'  placeholder="Search game..." />
-            <div class="result-count">
-            <span id='searched_count'><?php echo $allcount;?></span>results 
-            <i class='fa fa-cog' style='padding:5px;cursor:pointer;font-size: 20px;' data-toggle="modal" data-target="#exampleModal" ></i>               
-            </div>
+            </div>          
         </div>
-        </div>          
+        </form>
     </div>
-    </form>
-</div>
-<div class="select-game">		
-    <div style='position:relative;margin-top:10px;overflow: hidden;' id="icon_view_div">
-    
-        <div id='icon_views' style='overflow: hidden ;min-height:450px;'>
-        </div>
-        <div class='pagination-bar'>
-            <p id="pagination-here"></p>
-        </div>
-    </div>		
-    <div style='background:#fff; margin:20px; opacity:0.9; display:none' id='table_view_div'>
-        <div style='padding:20px;overflow:hidden'>
-            <table id="example" class="table table-striped table-bordered nowrap" style='width:100%'>
-                <thead>
-                    <tr>
-                        <th>Game name</th>
-                        <th>Description</th>
-                        <th>Tags</th>
-                        <th>Genre</th>
-                        <th>Publish date</th>
-                        <th>Credits</th>
-                        <th>Developer</th>
-                        <th>Rating</th>
-                        <th>Play</th>
-                    </tr>
-                </thead>
-                <tbody id='main_table_body'>				
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Game name</th>
-                        <th>Description</th>
-                        <th>Tags</th>
-                        <th>Genre</th>
-                        <th>Publish date</th>
-                        <th>Credit</th>
-                        <th>Developer</th>
-                        <th>Rating</th>
-                        <th>Play</th>
-                    </tr>
-                </tfoot>
-            </table>
+    <div class="select-game">		
+        <div style='position:relative;margin-top:10px;overflow: hidden;' id="icon_view_div">
+        
+            <div id='icon_views' style='overflow: hidden ;min-height:450px;'>
+            </div>
             <div class='pagination-bar'>
-            <p id="pagination-table"></p>
+                <p id="pagination-here"></p>
+            </div>
+        </div>		
+        <div style='background:#fff; margin:20px; opacity:0.9; display:none' id='table_view_div'>
+            <div style='padding:20px;overflow:hidden;background:#333;color:#eee;'>
+                <table id="example" class="table table-striped table-bordered nowrap" style='width:100%'>
+                    <thead>
+                        <tr>
+                            <th>Game name</th>
+                            <th>Description</th>
+                            <th>Tags</th>
+                            <th>Genre</th>
+                            <th>Publish date</th>
+                            <th>Credits</th>
+                            <th>Developer</th>
+                            <th>Rating</th>
+                            <th>Play</th>
+                        </tr>
+                    </thead>
+                    <tbody id='main_table_body'>				
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Game name</th>
+                            <th>Description</th>
+                            <th>Tags</th>
+                            <th>Genre</th>
+                            <th>Publish date</th>
+                            <th>Credit</th>
+                            <th>Developer</th>
+                            <th>Rating</th>
+                            <th>Play</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class='pagination-bar'>
+                <p id="pagination-table"></p>
+                </div>
             </div>
         </div>
+        <input type='hidden' id='hid_num' name='hid_num' value='1'/>
+        <input type='hidden' id='hid_dsc' name='hid_dsc'/>
+        <input type='hidden' id='hid_name' name='hid_name'/>
+        <input type='hidden' id='hid_tag' name='hid_tag'/>
+        <input type='hidden' id='hid_cre' name='hid_cre'/>
+        <input type='hidden' id='hid_gen' name='hid_gen'/>
+        <input type='hidden' id='hid_dev' name='hid_dev'/>
+        <input type='hidden' id='hid_sort' name='hid_sort'/>	
     </div>
-    <input type='hidden' id='hid_num' name='hid_num' value='1'/>
-    <input type='hidden' id='hid_dsc' name='hid_dsc'/>
-    <input type='hidden' id='hid_name' name='hid_name'/>
-    <input type='hidden' id='hid_tag' name='hid_tag'/>
-    <input type='hidden' id='hid_cre' name='hid_cre'/>
-    <input type='hidden' id='hid_gen' name='hid_gen'/>
-    <input type='hidden' id='hid_dev' name='hid_dev'/>
-    <input type='hidden' id='hid_sort' name='hid_sort'/>	
-</div>
 </div>
 <script>
     var dtable = null;
@@ -200,4 +200,31 @@ $allcount = getAllGameCount();
         
         //$(this).bootpag({total: 10, maxVisible: 10});
     });
+    $("#icon_view_div").on('click', '.select-picture',function() {
+        var rom = $(this).attr("data");
+        $.ajax({url: "./gamepage.php", 
+            data : {
+                "rom" : rom					
+            },
+            type : "post",
+            success: function(result){
+                $("#main_body").html(result);	
+                let rom_path = $("#hid_path").val();
+                loadfileName(rom_path);				
+        }});       
+    })
+    
+    $("#table_view_div").on('click', '.play-btn',function() {
+        var rom = $(this).attr("data");
+        $.ajax({url: "./gamepage.php", 
+            data : {
+                "rom" : rom					
+            },
+            type : "post",
+            success: function(result){
+                $("#main_body").html(result);	
+                let rom_path = $("#hid_path").val();
+                loadfileName(rom_path);				
+        }});       
+    })
 </script>

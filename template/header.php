@@ -19,6 +19,7 @@ include_once "./mysql.php";
         <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./assets/css/util.css">
         <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
+
         <link rel="stylesheet" type="text/css" href="./assets/css/toastr.min.css">
         <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./assets/css/searchbox.css">
@@ -33,10 +34,13 @@ include_once "./mysql.php";
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css"/>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css"/>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css"/>
+        
+
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>     
         <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+        
         <script type="text/javascript" src="./assets/js/jquery.bootpag.js"></script>
         <script type="text/javascript" src="assets/js/emulator.js"></script>	
     </head>
@@ -88,7 +92,7 @@ include_once "./mysql.php";
         }    
         
     </style>
-    <body style="">
+    <body style="background-image: linear-gradient(to bottom, black, transparent), url(./assets/img/back2.png);">
     <nav class="navbar navbar-expand-md navbar-dark" style='background-color:black;width:100%;margin-bottom:0px;'>
         <div>    
     <img class='my-logo' id='go_home' src="./assets/img/logo.png"/></div>
@@ -135,7 +139,7 @@ include_once "./mysql.php";
                         <a class="nav-link fabuttons" id='manageuser'><i class='fa fa-user'></i><br>Users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fabuttons" id='manageprofile'><i class='fa fa-cog'></i><br>Profile</a>
+                        <a class="nav-link fabuttons" id='manageprofile'><i class='fa fa-cog'></i><br>Setting</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fabuttons" id='login_out'><i class='fa fa-sign-out-alt'></i><br>Logout</a>
@@ -143,13 +147,16 @@ include_once "./mysql.php";
                 <?php endif;?>
                 <?php if($priv == 2) :?>
                     <li class="nav-item">
+                        <a class="nav-link fabuttons" id='show_col'><i class='fa fa-smile'></i><br>Favorite Games</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link fabuttons" id='managegames'><i class='fa fa-gamepad'></i><br>My Games</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link fabuttons" id='upload_data'><i class='fa fa-upload'></i><br>Upload</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fabuttons" id='managegames'><i class='fa fa-gamepad'></i><br>Games</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fabuttons" id='manageprofile'><i class='fa fa-cog'></i><br>Profile</a>
+                        <a class="nav-link fabuttons" id='manageprofile'><i class='fa fa-cog'></i><br>Setting</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fabuttons" id='login_out'><i class='fa fa-sign-out-alt'></i><br>Logout</a>
@@ -165,7 +172,7 @@ include_once "./mysql.php";
     $allcount = getAllGameCount();
     ?>
 
-<div id='main_body'>
+<div id='main_body' class='container-fluid'>
     <?php
     require_once "./pages/show_collections.php";
     ?>

@@ -113,7 +113,7 @@ if (!empty($_POST))
             $allpage = ($allcnt % TABLE_PAGE_CNT == 0) ? (int)($allcnt / TABLE_PAGE_CNT) : (int)($allcnt /TABLE_PAGE_CNT) + 1;
 
             $sql = "SELECT games.demo_rom, games.gamename, games.promo_image, games.description, tags.tagname AS tag, genre.genrename AS genre, games.credits, games.developer_name, games.rating, games.ID, games.date FROM games INNER JOIN genre ON games.genre=genre.id INNER JOIN tags ON tags.id=games.tag WHERE 1=1 $con LIMIT $start, ".TABLE_PAGE_CNT;
-    
+           
             $result = mysqli_query($mysql_db, $sql);	
             
             
@@ -297,7 +297,7 @@ if (!empty($_POST))
         case "load_collections": {
             $w = $mysql_db->real_escape_string(inputParam('w'));
             $curpage = $mysql_db->real_escape_string(inputParam('page'));
-         
+            $w = (int)$w;
             $pg = 2;
             $pic_width = 0;
 
@@ -453,6 +453,18 @@ if (!empty($_POST))
                 echo "</div>
                 </div>";
             }
+        }
+        break;
+        case "update_profile": {
+            $username = $mysql_db->real_escape_string(inputParam('username'));
+            $phone = $mysql_db->real_escape_string(inputParam('phone'));
+            $pwd = $mysql_db->real_escape_string(inputParam('pwd'));
+            $confirm = $mysql_db->real_escape_string(inputParam('confirm'));
+            $twitter = $mysql_db->real_escape_string(inputParam('twitter'));
+            $instagram = $mysql_db->real_escape_string(inputParam('instagram'));
+            $facebook = $mysql_db->real_escape_string(inputParam('facebook'));
+            $user_id = $_SESSION['user_id'];
+            $sql = "UPDATE users SET username='$user', phone='$phone',twitter='$twitter',instagram='$instagram',facebook='$facebook'"
         }
         break;
     }

@@ -125,7 +125,7 @@ else
               <div class="row">
               <div class="input-field">
                 <div class="input-select" style='padding-top:3px'>
-                  <input type='text' id='search_description' placeholder='Description' class='input_text_field'/>
+                  <input type='text' id='search_description' placeholder='Description' class='input_text_field' style='background:#fff'/>
                 </div>
               </div>
               <div class="input-field">
@@ -148,7 +148,7 @@ else
             <div class="row">
              <div class="input-field">
                 <div class="input-select"  style='padding-top:3px'>
-                  <input type='text' id='search_credits' placeholder='Credits' class='input_text_field'/>
+                  <input type='text' id='search_credits' placeholder='Credits' class='input_text_field' style='background:#fff'/>
                 </div>
               </div>
               <div class="input-field">
@@ -169,7 +169,7 @@ else
             <div class="row second">
              <div class="input-field">
                 <div class="input-select"  style='padding-top:3px'>
-                  <input type='text' id='search_developer' placeholder='Developer' class='input_text_field'/>
+                  <input type='text' id='search_developer' placeholder='Developer' class='input_text_field' style='background:#fff'/>
                 </div>
               </div>
               <div class="input-field">
@@ -465,46 +465,8 @@ else
         $("#icon_view_div").fadeOut(500);
         $("#table_view_div").fadeIn(500);
         $(window).trigger('resize');
-    })
-    $("#icon_view_div").on('click', '.select-picture',function() {
-        var rom = $(this).attr("data");
-        $.ajax({url: "./gamepage.php", 
-            data : {
-                "rom" : rom					
-            },
-            type : "post",
-            success: function(result){
-                $("#main_body").html(result);	
-                let rom_path = $("#hid_path").val();
-                loadfileName(rom_path);				
-        }});       
-    })
-    $("#collections_div").on('click', '.select-picture',function() {
-        var rom = $(this).attr("data");
-        $.ajax({url: "./gamepage.php", 
-            data : {
-                "rom" : rom					
-            },
-            type : "post",
-            success: function(result){
-                $("#main_body").html(result);	
-                let rom_path = $("#hid_path").val();
-                loadfileName(rom_path);				
-        }});       
-    })
-    $("#table_view_div").on('click', '.play-btn',function() {
-        var rom = $(this).attr("data");
-        $.ajax({url: "./gamepage.php", 
-            data : {
-                "rom" : rom					
-            },
-            type : "post",
-            success: function(result){
-                $("#main_body").html(result);	
-                let rom_path = $("#hid_path").val();
-                loadfileName(rom_path);				
-        }});       
-    })
+    })  
+    
     $("#login_pro").on('click', function() {
         $.ajax({url: "./pages/login.php", 
             data : {
@@ -512,6 +474,18 @@ else
             type : "post",
             success: function(result){
                 $("#main_body").html(result);	
+        }});
+       $(".nav-item").removeClass("active");
+       $(this).parents("li").addClass("active");     
+    })
+    $("#login_out").on('click', function() {
+        $.ajax({url: "./database.php", 
+            data : {
+              "do":"login_out"
+            },
+            type : "post",
+            success: function(result){
+                location.href = "./";
         }});
        $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");     
@@ -575,6 +549,18 @@ else
     }}); 
     $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");      
+  })
+  $("#manageprofile").on('click', function() {
+    $.ajax({url: "./pages/manage_profile.php", 
+        data : {
+          
+        },
+        type : "post",
+        success: function(result){
+          $("#main_body").html(result);  
+    }}); 
+    $(".nav-item").removeClass("active");
+    $(this).parents("li").addClass("active");      
   })
 <?php endif;?>
 <?php if($priv==ADMIN) :?>

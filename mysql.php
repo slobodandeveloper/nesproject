@@ -40,6 +40,10 @@
         `validated` TINYINT NOT NULL COMMENT 'validated flag',
         `emailcode` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'current email code',
         `email` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'email',
+        `phone` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
+        `twitter` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
+        `instagram` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
+        `facebook` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
         PRIMARY KEY (`ID`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
     
     $result = mysqli_query($mysql_db, "SELECT COUNT(*) FROM users");
@@ -194,6 +198,15 @@
         else if($g=="full")
             return $full;
         return "";
+    }
+    function getUserInformation() {
+        global $mysql_db;
+        $user_id = $_SESSION['user_id'];
+
+        $sql = "SELECT * FROM users WHERE ID='$user_id'";
+        $result = mysqli_query($mysql_db, $sql);
+        $row = $result -> fetch_assoc();
+        return $row;
     }
     function getGameName($i) {
         global $mysql_db;

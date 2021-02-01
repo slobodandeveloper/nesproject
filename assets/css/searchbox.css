@@ -949,7 +949,7 @@ legend {
 .s007 form .inner-form .input-field input {
     height: 100%;
     border: 0;
-    background: #fff;
+    background: #3b3d3e;
     display: block;
     width: 100%;
     padding: 10px 32px 10px 70px;
@@ -1064,7 +1064,7 @@ legend {
     right: 0;
     position: absolute;
     font-weight: bold;
-    color: #555;
+    color: #ccc;
     height: 100%;
     font-size: 14px;
 }

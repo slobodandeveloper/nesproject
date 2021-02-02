@@ -107,7 +107,10 @@ include_once "./mysql.php";
             <ul class="navbar-nav" style='float:right'>
                 <li class="nav-item">
                     <a class="nav-link fabuttons" href='http://www.TheNew8bitHeroes.com' style=><img src='./assets/img/NESmakerLogo.png' style='height:48px;margin-top:-2px;'/><p style='font-size:12px;margin-top:-2px;'>LEARN NESMAKER</p></a>
-                </li>   
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fabuttons" id='play_random'><i class='fa fa-random'></i><br>Play Random</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link fabuttons" id='show_all'><i class='fa fa-list'></i><br>Show All Games</a>
                 </li>

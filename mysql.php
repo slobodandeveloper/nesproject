@@ -9,6 +9,8 @@
     define('PLAYER',            2);
     define('PROPLAYER',         4);
     define('CREATOR',           8);    
+
+    define('BANNED',           2);
     $server_name = "localhost";
     //$user_name = "theret14_man";
     //$user_password = "dXh4RfwqfpCnYhZ";
@@ -55,7 +57,7 @@
         $pwd = md5("user");
         mysqli_query($mysql_db, "INSERT INTO users(username, pwd, priv) VALUES('user', '$pwd', '".PLAYER."')");
         $pwd = md5("admin");
-        mysqli_query($mysql_db, "INSERT INTO users(username, pwd, priv) VALUES('admin', '$pwd', '1')");
+        mysqli_query($mysql_db, "INSERT INTO users(username, pwd, priv, email) VALUES('admin', '$pwd', '1','nesmakerhelp@gmail.com')");
     }
 
     $result = mysqli_query($mysql_db, "CREATE TABLE IF NOT EXISTS `downloads` (

@@ -43,24 +43,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="verificateModal" tabindex="-1" role="dialog"aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Check your email and input verification code </h4>
-        <button type="button" class="close" id='btn_close_modal'>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <input type="text" class="form-control" name='verificode' id='verificode' placeholder="Verification Code" value="" />
-      </div>
-      <div class="modal-footer">        
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id='save_verification'>Submit</button>
-        </div>
-    </div>
-  </div>
-</div>
+
 <script>
     $("#btn_close_modal").click(function(e) {
         $("#verificateModal").removeClass("in");
@@ -103,28 +86,6 @@
                }
         }}); 
     });
-    $("#save_verification").click(function(e) {
-        var ecode = $("#verificode").val();
-        var email = $("#email").val();
-        $.ajax({url: "./database.php", 
-            data : {
-                "do" : "everification",
-                "emailcode" : ecode,
-                "email" : email,
-            },
-            type : "post",
-            success: function(result){   
-               if(result == "0"){
-                    toastr['error']("Verification code not matched.");
-                    return;
-               }    
-               else {
-                    toastr['success']("Signup success.");
-                    $("#verificateModal").removeClass("in");
-                    $("#verificateModal").css("display","none");
-                    location.href = "./";
-               }
-        }});
-    });
+    
 </script>
 <script src="./assets/js/loginformvalidate.js"></script>

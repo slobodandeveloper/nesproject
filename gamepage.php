@@ -1,11 +1,10 @@
 <?php
     session_start();
     include_once "mysql.php";
+    $priv = 0;
     if(isset($_SESSION['priv']))
         $priv = $_SESSION['priv'];
-    else
-        $priv = 0;
-
+  
     $packrom = $rom = $mysql_db->real_escape_string($_POST['rom']);
     $rom = base64_decode($rom);
     $sql = "SELECT * FROM games WHERE ID='$rom'";
@@ -170,13 +169,23 @@ imagejpeg($resized, "RESIZED.jpg");
 </div>
 <script>
     $("#get_full").on("click", function() {
+    <?php if($priv == PROPLAYER || $priv==ADMIN || $priv==(PROPLAYER+CREATOR)):?>
         $("#download_frame").attr("src","./download.php?g=full&i=<?php echo $packrom;?>");
+    <?php else:?>
+        toastr['error']("Please become pro player");
+    <?php endif;?>
     });
     $("#get_demo").on("click", function() {
-        $("#download_frame").attr("src","./download.php?g=demo&i=<?php echo $packrom;?>");
+       
+        <?php if($priv == PROPLAYER || $priv==ADMIN || $priv==(PROPLAYER+CREATOR)):?>
+      
+            $("#download_frame").attr("src","./download.php?g=demo&i=<?php echo $packrom;?>");
+        <?php else:?>
+            toastr['error']("Please become pro player");
+        <?php endif;?>       
     });
     $("#ratefeedback").on("click", function() {
-<?php if($priv == PROPLAYER || $priv == PROPLAYER+CREATOR || $priv == ADMIN):?>
+<?php if($priv == PROPLAYER || $priv == (PROPLAYER+CREATOR) || $priv == ADMIN):?>
         var r = $("#hid_rid").val();
         $.ajax({url: "./pages/rating.php", 
         data : {

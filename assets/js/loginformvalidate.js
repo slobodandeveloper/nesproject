@@ -21,7 +21,6 @@
 
     $('.login100-form-btn').on('click', function() {
         var check = true;
-
         for (var i = 0; i < input.length; i++) {
             if (validate(input[i]) == false) {
                 showValidate(input[i]);

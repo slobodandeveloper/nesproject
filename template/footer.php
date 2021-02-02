@@ -304,6 +304,25 @@ else
     </div>
   </div>
 </div>
+<div class="modal fade" id="verificateModal" tabindex="-1" role="dialog"aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Check your email and input verification code </h4>
+        <button type="button" class="close" data-dismiss="modal" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <input type="text" class="form-control" name='verificode' id='verificode' placeholder="Verification Code" value="" />
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id='Resend_code'>Resend</button>        
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id='save_verification'>Submit</button>
+        </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 	window.isDebug = location.href.match(/debug=1$/i) ? true : false;
 	function loadfile(event) {
@@ -608,6 +627,25 @@ else
               toastr['info']("Successfully saved. You can check it in your favorite list.");
         }});   
     })
+    $("#play_random").on('click', function() {
+        $.ajax({url: "./database.php", 
+            data : {
+              "do":"get_random"
+            },
+            type : "post",
+            success: function(result){
+              $.ajax({url: "./gamepage.php", 
+                  data : {
+                      "rom" : result					
+                  },
+                  type : "post",
+                  success: function(result){
+                      $("#main_body").html(result);	
+                      let rom_path = $("#hid_path").val();
+                      loadfileName(rom_path);				
+              }}); 
+        }});   
+    })
 <?php if($priv != 0) :?>
   $("#upload_data").on('click', function() {
     $.ajax({url: "./pages/add.php", 
@@ -687,7 +725,7 @@ else
     $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");    
   })
-  $("#manageusers").on('click', function() {
+  $("#manageuser").on('click', function() {
     $.ajax({url: "./pages/manage_user.php", 
         data : {
           
@@ -701,6 +739,35 @@ else
        $(this).parents("li").addClass("active");    
   })
 <?php endif;?>
+
+  $("#save_verification").click(function(e) {
+        var ecode = $("#verificode").val();
+        var email = $("#email").val();
+        if(email == undefined)  email = "";
+        if(ecode == "") {
+          toastr['error']('Input verification code.');
+          return;
+        }
+        $.ajax({url: "./database.php", 
+            data : {
+                "do" : "everification",
+                "emailcode" : ecode,
+                "email" : email,
+            },
+            type : "post",
+            success: function(result){
+              console.log(result);   
+               if(result == "0"){
+                  toastr['error']("Verification code not matched.");
+                  return;
+               }    
+               else {
+                    toastr['success']("Signup success.");
+                    $("#verificateModal").modal("hide");                   
+                    location.href = "./";
+               }
+        }});
+    });
 </script>
 </body>
 </html>

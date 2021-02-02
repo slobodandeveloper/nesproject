@@ -156,7 +156,7 @@ if (!empty($_POST))
             $licensepwd = $mysql_db->real_escape_string(inputParam('licensepwd'));
             $password = md5($password);
             $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-            die("1");
+            
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 die("-1");
             }
@@ -167,7 +167,7 @@ if (!empty($_POST))
                 die ("-2");
             }        
             $emailcode = rand(1000000, 10000000);
-            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv) VALUES('$username', '$email','$emailcode','0', '$password','2')";
+            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`) VALUES('$username', '$email','$emailcode','0', '$password','2','1')";
             $result = mysqli_query($mysql_db, $sql);
             //die($sql);
             try {
@@ -285,8 +285,8 @@ if (!empty($_POST))
         case "everification":
             $emailcode = $mysql_db->real_escape_string(inputParam('emailcode'));
             $email = $mysql_db->real_escape_string(inputParam('email')); 
-            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE email='$email' AND emailcode='$emailcode'");
-            $cnt = $result->num_rows;
+            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE ((email='$email' AND emailcode='$emailcode') OR (username='$email' AND emailcode='$emailcode'))");
+            $cnt = $result->num_rows;   
             if($cnt == 0) {
                 echo ("0");
             } 
@@ -303,16 +303,28 @@ if (!empty($_POST))
         case "login":
             $password = $mysql_db->real_escape_string(inputParam('password'));
             $username = $mysql_db->real_escape_string(inputParam('username')); 
+            $username = filter_var($username, FILTER_SANITIZE_EMAIL);
+            
+            if (!filter_var($username, FILTER_VALIDATE_EMAIL)) {
+                die("-3");
+            }
+
             $pwd = md5($password);
             
-            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE username='$username' AND pwd='$pwd'");
+            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE ((username='$username' AND pwd='$pwd') OR (email='$username' AND pwd='$pwd'))");
             $cnt = $result->num_rows;
             if($cnt == 0) {
                 echo ("0");
             }        
             else {
                 $row = $result -> fetch_assoc();
+                $status = $row['status'];
+                $validated = $row['validated'];
                 $priv = $row['priv'];
+                if($status == BANNED)
+                    die("-1");
+                if($validated != 1 && $priv != ADMIN)
+                    die("-2");                
                 $id = $row['ID'];
                 $_SESSION['priv'] = $priv; 
                 $_SESSION['user_id'] = $id;      
@@ -365,7 +377,14 @@ if (!empty($_POST))
             $id = $mysql_db->real_escape_string(inputParam('id'));
                 
             $sql = "DELETE FROM favs WHERE ID='$id'";
-            $result = mysqli_query($mysql_db, $sql);    
+            $result = mysqli_query($mysql_db, $sql);   
+
+            break;
+        case "removeuser":
+            $id = $mysql_db->real_escape_string(inputParam('id'));
+                
+            $sql = "DELETE FROM users WHERE ID='$id'";
+            $result = mysqli_query($mysql_db, $sql);   
 
             break;
         case "removegame":
@@ -547,6 +566,32 @@ if (!empty($_POST))
             die($actual_link);
         }
         break;
+        case "changepriv":
+            $priv = $mysql_db->real_escape_string(inputParam('prv'));
+            $id = $mysql_db->real_escape_string(inputParam('id'));
+            $sql = "UPDATE users SET priv='$priv' WHERE ID='$id'";
+
+            mysqli_query($mysql_db, $sql);
+            break;
+        case "get_random":
+            $sql = "SELECT COUNT(*) AS cnt FROM games";
+            $result = mysqli_query($mysql_db, $sql);
+            $row = $result->fetch_assoc();
+            $cnt = $row['cnt'];
+
+            $val = rand(1, $cnt);
+            $sql = "SELECT ID FROM games WHERE 1=1 LIMIT $val, 1";
+            $result = mysqli_query($mysql_db, $sql);
+            $row = $result->fetch_assoc();
+            $id = base64_encode($row['ID']);
+            die($id);
+            break;
+        case "changestt":
+            $stt = $mysql_db->real_escape_string(inputParam('stt'));
+            $id = $mysql_db->real_escape_string(inputParam('id'));
+            $sql = "UPDATE users SET status='$stt' WHERE ID='$id'";
+            mysqli_query($mysql_db, $sql);
+            break;    
         case "update_profile": {
             $username = $mysql_db->real_escape_string(inputParam('username'));
             $phone = $mysql_db->real_escape_string(inputParam('phone'));

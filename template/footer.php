@@ -768,6 +768,24 @@ else
                }
         }});
     });
+    $("#Resend_code").click(function(e) {        
+        var email = $("#email").val();
+        if(email == undefined)  email = "";
+        if(email == "") {
+          toastr['error']('Invalid Email address.');
+          return;
+        }
+        $.ajax({url: "./database.php", 
+            data : {
+                "do" : "resend",
+                "email" : email
+            },
+            type : "post",
+            success: function(result){
+                toastr['success']("Sent");
+              
+        }});
+    });
 </script>
 </body>
 </html>

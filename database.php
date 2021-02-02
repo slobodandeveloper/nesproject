@@ -148,6 +148,58 @@ if (!empty($_POST))
                 </tr>";
             }
             break;
+        case "resend":
+            $email = $mysql_db->real_escape_string(inputParam('email'));
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+            
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                die("-1");
+            }
+            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE email='$email'");
+            $cnt = $result->num_rows;
+            if($cnt == 0) {
+                die ("-2");
+            }
+            $row = $result->fetch_assoc();
+            $id = $row['ID'];
+
+            $emailcode = rand(1000000, 10000000);
+            $sql = "UPDATE users SET emailcode='$emailcode' WHERE ID='$id'";
+            mysqli_query($mysql_db,$sql);
+            try {
+                $mailer->SMTPDebug = false;
+                $mailer->isSMTP();
+            
+                if ($developmentMode) {
+                $mailer->SMTPOptions = [
+                    'ssl'=> [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                    ]
+                ];
+                }           
+            
+                $mailer->Host = 'nesemutest.com';
+                $mailer->SMTPAuth = true;
+                $mailer->Username = 'retroverse@nesemutest.com';
+                $mailer->Password = 'G]_8c$jD4Tlw';
+                $mailer->SMTPSecure = 'tls';
+                $mailer->Port = 587;
+            
+                $mailer->setFrom('retroverse@nesemutest.com', 'Email verification for NES');
+                $mailer->addAddress($email, 'Name of recipient');
+            
+                $mailer->isHTML(true);
+                $mailer->Subject = 'Email verification';
+                $mailer->Body = 'Verification code : '.$emailcode;
+            
+                $mailer->send();
+                $mailer->ClearAllRecipients();
+            
+            } catch (Exception $e) {
+            }
+            break;
         case "signup":
             $email = $mysql_db->real_escape_string(inputParam('email'));
             $password = $mysql_db->real_escape_string(inputParam('password'));
@@ -167,11 +219,11 @@ if (!empty($_POST))
                 die ("-2");
             }        
             $emailcode = rand(1000000, 10000000);
-            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`) VALUES('$username', '$email','$emailcode','0', '$password','2','1')";
+            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`,`avatar_path`) VALUES('$username', '$email','$emailcode','0', '$password','2','1','./assets/img/default.png')";
             $result = mysqli_query($mysql_db, $sql);
             //die($sql);
             try {
-                $mailer->SMTPDebug = 2;
+                $mailer->SMTPDebug = false;
                 $mailer->isSMTP();
             
                 if ($developmentMode) {
@@ -211,7 +263,7 @@ if (!empty($_POST))
             $email = $row['email'];
             $data = $mysql_db->real_escape_string(inputParam('data'));
             try {
-                $mailer->SMTPDebug = 2;
+                $mailer->SMTPDebug = false;
                 $mailer->isSMTP();
             
                 if ($developmentMode) {

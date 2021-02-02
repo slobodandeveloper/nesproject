@@ -145,9 +145,20 @@ include_once "./mysql.php";
                         <a class="nav-link fabuttons" id='login_out'><i class='fa fa-sign-out-alt'></i><br>Logout</a>
                     </li>
                 <?php endif;?>
-                <?php if($priv == 2) :?>
+                <?php if($priv == 2||$priv == 4) :?>
                     <li class="nav-item">
-                        <a class="nav-link fabuttons" id='show_col'><i class='fa fa-smile'></i><br>Favorite Games</a>
+                        <a class="nav-link fabuttons" id='show_fav'><i class='fa fa-smile'></i><br>Favorite Games</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link fabuttons" id='manageprofile'><i class='fa fa-cog'></i><br>Setting</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fabuttons" id='login_out'><i class='fa fa-sign-out-alt'></i><br>Logout</a>
+                    </li>
+                <?php endif;?> 
+                <?php if($priv >4) :?>
+                    <li class="nav-item">
+                        <a class="nav-link fabuttons" id='show_fav'><i class='fa fa-smile'></i><br>Favorite Games</a>
                     </li>                    
                     <li class="nav-item">
                         <a class="nav-link fabuttons" id='managegames'><i class='fa fa-gamepad'></i><br>My Games</a>
@@ -162,7 +173,6 @@ include_once "./mysql.php";
                         <a class="nav-link fabuttons" id='login_out'><i class='fa fa-sign-out-alt'></i><br>Logout</a>
                     </li>
                 <?php endif;?> 
-                
             </ul>
         </div>       
     </nav>
@@ -174,6 +184,32 @@ include_once "./mysql.php";
 
 <div id='main_body' class='container-fluid'>
     <?php
-    require_once "./pages/show_collections.php";
+    $url = isset($_GET['g']) ? $_GET['g'] : "";
+    if($url == "")
+        require_once "./pages/show_collections.php";
+    else {
+        $rom = base64_decode($url);
+    }
     ?>
 </div>
+<?php
+if($url != ""):
+?>
+<script>
+$(document).ready(function() {
+    var rom = <?php echo '"'.$rom.'"';?>;
+    $.ajax({url: "./gamepage.php", 
+        data : {
+            "rom" : rom					
+        },
+        type : "post",
+        success: function(result){
+            $("#main_body").html(result);	
+            let rom_path = $("#hid_path").val();
+            loadfileName(rom_path);				
+    }});     
+});
+</script>
+<?php
+endif;
+?>

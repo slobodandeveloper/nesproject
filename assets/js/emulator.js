@@ -1131,10 +1131,10 @@ window.emu = (function() {
         function statusRead() {
             //enableFrameIrq = true;
             return (pulse1.lengthCounter == 0 ? 0 : 0x01) |
-            (pulse2.lengthCounter == 0 ? 0 : 0x02) |
-            (triangle.lengthCounter == 0 ? 0 : 0x04) |
-            (noise.lengthCounter == 0 ? 0 : 0x08) |
-            (dmc.bytesRemaining ? 0x10 : 0);
+                (pulse2.lengthCounter == 0 ? 0 : 0x02) |
+                (triangle.lengthCounter == 0 ? 0 : 0x04) |
+                (noise.lengthCounter == 0 ? 0 : 0x08) |
+                (dmc.bytesRemaining ? 0x10 : 0);
         }
 
         function statusWrite(value) {
@@ -1201,8 +1201,10 @@ window.emu = (function() {
             hwRegisters[0x4017].write = frameCounter;
         }
 
-        function resetStep() { step = 0;
-            apuFrames = 0; }
+        function resetStep() {
+            step = 0;
+            apuFrames = 0;
+        }
 
         var apuInterface = {
             tick: tick, // function() { running = true; },
@@ -1337,6 +1339,8 @@ window.emu = (function() {
             //Resume();
         }
         window.document.body.onkeydown = function(e) {
+            if (e.target.tagName.toUpperCase() == "INPUT" || e.target.tagName.toUpperCase() == "TEXTAREA")
+                return;
             if (configButton) {
                 if (e.keyCode == 27) { // ESC
                     configButton = 0;
@@ -1353,6 +1357,8 @@ window.emu = (function() {
             }
         };
         window.document.body.onkeyup = function(e) {
+            if (e.target.tagName.toUpperCase() == "INPUT" || e.target.tagName.toUpperCase() == "TEXTAREA")
+                return;
             if (p1Buttons[e.keyCode]) {
                 if (controllers[0] & p1Buttons[e.keyCode]) controllers[0] ^= p1Buttons[e.keyCode];
                 //return false;
@@ -2049,8 +2055,10 @@ window.emu = (function() {
 
     if (illegalOpcodes) {
 
-        opcodes[BRK] = function() { pc[0]++;
-            pendingIrq = true; }; // not really illegal, but catching it helps with debugging :)
+        opcodes[BRK] = function() {
+            pc[0]++;
+            pendingIrq = true;
+        }; // not really illegal, but catching it helps with debugging :)
 
         opcodes[LAXzp] = function() { cpuRegisters[X] = loadValue(readValue(param8(), -1, true), A); };
         opcodes[LAXzpY] = function() { cpuRegisters[X] = loadValue(readValue(param8(), Y, true), A); };
@@ -2071,28 +2079,42 @@ window.emu = (function() {
         opcodes[ALR] = function() { cpuRegisters[A] = lsr(cpuRegisters[A] & param8()); };
         opcodes[ARR] = function() { cpuRegisters[A] = lsr(cpuRegisters[A] & param8(), C); };
 
-        opcodes[ANC1] = opcodes[ANC2] = function() { loadValue(param8() & cpuRegisters[A], A);
-            c = n; };
+        opcodes[ANC1] = opcodes[ANC2] = function() {
+            loadValue(param8() & cpuRegisters[A], A);
+            c = n;
+        };
 
-        opcodes[INSa] = function() { var addr = param16();
+        opcodes[INSa] = function() {
+                var addr = param16();
                 inc(1, addr, -1);
-                cpuRegisters[A] = adc(A, 255 - readValue(addr, -1), c); }
+                cpuRegisters[A] = adc(A, 255 - readValue(addr, -1), c);
+            }
             // 0xFF: opcodes[INSaX] = function() { var addr = param16(); inc(1, addr, X); cpuRegisters[A] = adc(A, 255 - readValue(addr, X), c); }
-        opcodes[INSaY] = function() { var addr = param16();
+        opcodes[INSaY] = function() {
+            var addr = param16();
             inc(1, addr, Y);
-            cpuRegisters[A] = adc(A, 255 - readValue(addr, Y), c); }
-        opcodes[INSzp] = function() { var addr = param8();
+            cpuRegisters[A] = adc(A, 255 - readValue(addr, Y), c);
+        }
+        opcodes[INSzp] = function() {
+            var addr = param8();
             inc(1, addr, -1, true);
-            cpuRegisters[A] = adc(A, 255 - readValue(addr, -1, true), c); }
-        opcodes[INSzpX] = function() { var addr = param8();
+            cpuRegisters[A] = adc(A, 255 - readValue(addr, -1, true), c);
+        }
+        opcodes[INSzpX] = function() {
+            var addr = param8();
             inc(1, addr, X, true);
-            cpuRegisters[A] = adc(A, 255 - readValue(addr, X, true), c); }
-        opcodes[INSiX] = function() { var addr = indirectX();
+            cpuRegisters[A] = adc(A, 255 - readValue(addr, X, true), c);
+        }
+        opcodes[INSiX] = function() {
+            var addr = indirectX();
             inc(1, addr, -1);
-            cpuRegisters[A] = adc(A, 255 - readValue(addr, -1), c); }
-        opcodes[INSiY] = function() { var addr = indirectY();
+            cpuRegisters[A] = adc(A, 255 - readValue(addr, -1), c);
+        }
+        opcodes[INSiY] = function() {
+            var addr = indirectY();
             inc(1, addr, -1);
-            cpuRegisters[A] = adc(A, 255 - readValue(addr, -1), c); }
+            cpuRegisters[A] = adc(A, 255 - readValue(addr, -1), c);
+        }
 
 
         for (var i = 0; i < nop1.length; i++) opcodes[nop1[i]] = function() {};
@@ -2507,15 +2529,23 @@ window.emu = (function() {
             chr11 = 0;
 
         mapperListener = [];
-        mapperListener[0x0FD8] = function() { L0 = false;
-            setChr(); };
-        mapperListener[0x0FE8] = function() { L0 = true;
-            setChr(); };
+        mapperListener[0x0FD8] = function() {
+            L0 = false;
+            setChr();
+        };
+        mapperListener[0x0FE8] = function() {
+            L0 = true;
+            setChr();
+        };
         for (var i = 0; i < 8; i++) {
-            mapperListener[0x1FD8 + i] = function() { L1 = false;
-                setChr(); };
-            mapperListener[0x1FE8 + i] = function() { L1 = true;
-                setChr(); };
+            mapperListener[0x1FD8 + i] = function() {
+                L1 = false;
+                setChr();
+            };
+            mapperListener[0x1FE8 + i] = function() {
+                L1 = true;
+                setChr();
+            };
         }
 
         function setChr() {
@@ -2534,14 +2564,22 @@ window.emu = (function() {
             setMirroring();
         });
 
-        var chr00Select = new HwRegister(null, function(value) { chr00 = value & 0x1F;
-            setChr(); });
-        var chr01Select = new HwRegister(null, function(value) { chr01 = value & 0x1F;
-            setChr(); });
-        var chr10Select = new HwRegister(null, function(value) { chr10 = value & 0x1F;
-            setChr(); });
-        var chr11Select = new HwRegister(null, function(value) { chr11 = value & 0x1F;
-            setChr(); });
+        var chr00Select = new HwRegister(null, function(value) {
+            chr00 = value & 0x1F;
+            setChr();
+        });
+        var chr01Select = new HwRegister(null, function(value) {
+            chr01 = value & 0x1F;
+            setChr();
+        });
+        var chr10Select = new HwRegister(null, function(value) {
+            chr10 = value & 0x1F;
+            setChr();
+        });
+        var chr11Select = new HwRegister(null, function(value) {
+            chr11 = value & 0x1F;
+            setChr();
+        });
         for (var i = 0xA000; i < 0xB000; i++) hwRegisters[i] = prgSelect;
         for (var i = 0xB000; i < 0xC000; i++) hwRegisters[i] = chr00Select;
         for (var i = 0xC000; i < 0xD000; i++) hwRegisters[i] = chr01Select;
@@ -3181,12 +3219,8 @@ PRG RAM mode: (needs to be extended to take extended RAM into consideration, or 
     }
 
     function setMirroring() {
-        nametables = vMirroring ?
-            [nameTableSources[0], nameTableSources[1], nameTableSources[0], nameTableSources[1]] :
-            [nameTableSources[0], nameTableSources[0], nameTableSources[1], nameTableSources[1]];
-        attributetables = vMirroring ?
-            [attrSources[0], attrSources[1], attrSources[0], attrSources[1]] :
-            [attrSources[0], attrSources[0], attrSources[1], attrSources[1]];
+        nametables = vMirroring ? [nameTableSources[0], nameTableSources[1], nameTableSources[0], nameTableSources[1]] : [nameTableSources[0], nameTableSources[0], nameTableSources[1], nameTableSources[1]];
+        attributetables = vMirroring ? [attrSources[0], attrSources[1], attrSources[0], attrSources[1]] : [attrSources[0], attrSources[0], attrSources[1], attrSources[1]];
     }
 
     var useGl = false; // GL is slower(!) but allows use of shaders
@@ -3522,10 +3556,14 @@ PRG RAM mode: (needs to be extended to take extended RAM into consideration, or 
         isPlaying: function() { return loaded; },
         buttonConfig: ButtonConfig,
         render: renderFrame,
-        enableShader: function(shaderScript) { useGl = true;
-            initGl(); },
-        disableShader: function() { useGl = false;
-            initSoftRender(); }
+        enableShader: function(shaderScript) {
+            useGl = true;
+            initGl();
+        },
+        disableShader: function() {
+            useGl = false;
+            initSoftRender();
+        }
 
 
 

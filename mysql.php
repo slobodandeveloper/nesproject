@@ -41,9 +41,11 @@
         `emailcode` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'current email code',
         `email` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'email',
         `phone` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
-        `twitter` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
-        `instagram` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
-        `facebook` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'phone',
+        `twitter` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'twitter',
+        `instagram` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'instagram',
+        `facebook` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'facebook',
+        `avatar_path` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'avatar',
+        `status` TINYINT NOT NULL COMMENT 'status',
         PRIMARY KEY (`ID`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
     
     $result = mysqli_query($mysql_db, "SELECT COUNT(*) FROM users");
@@ -56,10 +58,22 @@
         mysqli_query($mysql_db, "INSERT INTO users(username, pwd, priv) VALUES('admin', '$pwd', '1')");
     }
 
+    $result = mysqli_query($mysql_db, "CREATE TABLE IF NOT EXISTS `downloads` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `gameid` INT NOT NULL COMMENT 'game table id',
+        `user_id` INT NOT NULL COMMENT 'user table id',
+        PRIMARY KEY (`id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
+
+    $result = mysqli_query($mysql_db, "CREATE TABLE IF NOT EXISTS `favs` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `gameid` INT NOT NULL COMMENT 'game table id',
+        `user_id` INT NOT NULL COMMENT 'user table id',
+        PRIMARY KEY (`id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
+
     $result = mysqli_query($mysql_db, "CREATE TABLE IF NOT EXISTS `tags` (
         `id` int NOT NULL AUTO_INCREMENT,
         `tagname` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'TAG name',        
-        PRIMARY KEY (`ID`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
+        PRIMARY KEY (`id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
     
     $result = mysqli_query($mysql_db, "SELECT COUNT(*) FROM tags");
     $row = $result -> fetch_array(MYSQLI_NUM);
@@ -68,6 +82,14 @@
         mysqli_query($mysql_db, "INSERT INTO tags(tagname) VALUES('FEATURED')");
         mysqli_query($mysql_db, "INSERT INTO tags(tagname) VALUES('CHRISTMAS')");       
     }
+
+    $result = mysqli_query($mysql_db, "CREATE TABLE IF NOT EXISTS `ratings` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `game_id` INT NOT NULL COMMENT 'game id',
+        `user_id` INT NOT NULL COMMENT 'user id',
+        `rating` INT NOT NULL COMMENT 'rating score 0~5',
+        `comment` TEXT CHARACTER SET utf8 NOT NULL COMMENT 'Genre name',        
+        PRIMARY KEY (`id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8");
 
     $result = mysqli_query($mysql_db, "CREATE TABLE IF NOT EXISTS `genre` (
         `id` int NOT NULL AUTO_INCREMENT,
@@ -221,6 +243,33 @@
         global $mysql_db;
 
         $sql = "SELECT COUNT(*) AS cnt FROM games WHERE 1=1";
+        $result = mysqli_query($mysql_db, $sql);
+        $row = $result -> fetch_array(MYSQLI_NUM);
+        $cnt = $row[0];
+        return $cnt;
+    }
+    function getUploadCount() {
+        global $mysql_db;
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT COUNT(*) AS cnt FROM games WHERE user_id='$user_id'";
+        $result = mysqli_query($mysql_db, $sql);
+        $row = $result -> fetch_array(MYSQLI_NUM);
+        $cnt = $row[0];
+        return $cnt;
+    }
+    function getDownloadCnt() {
+        global $mysql_db;
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT COUNT(*) AS cnt FROM downloads WHERE user_id='$user_id'";
+        $result = mysqli_query($mysql_db, $sql);
+        $row = $result -> fetch_array(MYSQLI_NUM);
+        $cnt = $row[0];
+        return $cnt;
+    }
+    function getFavCnt() {
+        global $mysql_db;
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT COUNT(*) AS cnt FROM favs WHERE user_id='$user_id'";
         $result = mysqli_query($mysql_db, $sql);
         $row = $result -> fetch_array(MYSQLI_NUM);
         $cnt = $row[0];

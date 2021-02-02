@@ -205,6 +205,83 @@ if (!empty($_POST))
             }
             die("1");
             break;
+        case "send_report":
+            $row = getUserInformation();
+            $username = $row['username'];
+            $email = $row['email'];
+            $data = $mysql_db->real_escape_string(inputParam('data'));
+            try {
+                $mailer->SMTPDebug = 2;
+                $mailer->isSMTP();
+            
+                if ($developmentMode) {
+                $mailer->SMTPOptions = [
+                    'ssl'=> [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                    ]
+                ];
+                }           
+            
+                $mailer->Host = 'nesemutest.com';
+                $mailer->SMTPAuth = true;
+                $mailer->Username = 'retroverse@nesemutest.com';
+                $mailer->Password = 'G]_8c$jD4Tlw';
+                $mailer->SMTPSecure = 'tls';
+                $mailer->Port = 587;
+            
+                $mailer->setFrom('retroverse@nesemutest.com', 'RETROVERSE REPORT');
+                $mailer->addAddress("nesmakerhelp@gmail.com", 'Name of recipient');
+            
+                $mailer->isHTML(true);
+                $mailer->Subject = 'RETROVERSE REPORT';
+                $mailer->Body = $data;
+                $mailer->Body .= "\nUser name:".$username;
+                $mailer->Body .= "\nEmail Address:".$email;
+
+                $mailer->send();
+                $mailer->ClearAllRecipients();
+            
+            } catch (Exception $e) {
+            }
+            break;
+        case "add_to_favor":
+            $rid = $mysql_db->real_escape_string(inputParam('rid'));
+            $user_id = $_SESSION['user_id'];
+            $sql = "SELECT COUNT(*) AS cnt FROM favs WHERE gameid='$rid' AND user_id='$user_id'";
+            $result = mysqli_query($mysql_db, $sql);    
+            $row = $result->fetch_assoc();
+            $exist = $row["cnt"];
+            if($exist != 0)
+                die("0");
+            $sql = "INSERT INTO favs(gameid, user_id) VALUES('$rid','$user_id')";
+            mysqli_query($mysql_db, $sql);
+            break;
+        case "rating":
+            $gid = $mysql_db->real_escape_string(inputParam('gid'));
+            $score = $mysql_db->real_escape_string(inputParam('score'));
+            $comment = $mysql_db->real_escape_string(inputParam('comment'));
+            $user_id = $_SESSION['user_id'];
+
+            $sql = "SELECT COUNT(*) AS cnt FROM ratings WHERE game_id='$gid' AND user_id='$user_id'";
+            $result = mysqli_query($mysql_db, $sql);
+            $row = $result->fetch_assoc();
+            $exist = $row['cnt'];
+            if($exist == 0) {
+                $sql = "INSERT INTO ratings(game_id, user_id, rating,comment) VALUES('$gid','$user_id','$score','$comment')";
+                mysqli_query($mysql_db, $sql);
+
+                $sql = "SELECT AVG(rating) AS val FROM ratings WHERE game_id='$gid'";
+                $result = mysqli_query($mysql_db, $sql);
+                $row = $result->fetch_assoc();
+                $val = $row['val'];
+
+                $sql = "UPDATE games SET rating='$val' WHERE ID='$gid'";
+                mysqli_query($mysql_db, $sql);
+            }
+            
+            break;
         case "everification":
             $emailcode = $mysql_db->real_escape_string(inputParam('emailcode'));
             $email = $mysql_db->real_escape_string(inputParam('email')); 
@@ -281,6 +358,13 @@ if (!empty($_POST))
             $id = $mysql_db->real_escape_string(inputParam('id'));
             
             $sql = "DELETE FROM tags WHERE id='$id'";
+            $result = mysqli_query($mysql_db, $sql);    
+
+            break;
+        case "removefavs":
+            $id = $mysql_db->real_escape_string(inputParam('id'));
+                
+            $sql = "DELETE FROM favs WHERE ID='$id'";
             $result = mysqli_query($mysql_db, $sql);    
 
             break;
@@ -455,6 +539,14 @@ if (!empty($_POST))
             }
         }
         break;
+        case "getgamelink": {
+            $val = $mysql_db->real_escape_string(inputParam('val'));
+            $r = base64_encode(base64_encode($val));
+            $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+            $actual_link .= "/index.php?g=".$r;
+            die($actual_link);
+        }
+        break;
         case "update_profile": {
             $username = $mysql_db->real_escape_string(inputParam('username'));
             $phone = $mysql_db->real_escape_string(inputParam('phone'));
@@ -464,7 +556,14 @@ if (!empty($_POST))
             $instagram = $mysql_db->real_escape_string(inputParam('instagram'));
             $facebook = $mysql_db->real_escape_string(inputParam('facebook'));
             $user_id = $_SESSION['user_id'];
-            $sql = "UPDATE users SET username='$user', phone='$phone',twitter='$twitter',instagram='$instagram',facebook='$facebook'"
+            if($pwd == "") {
+                $sql = "UPDATE users SET username='$username', phone='$phone',twitter='$twitter',instagram='$instagram',facebook='$facebook' WHERE ID='$user_id'";
+            }
+            else {
+                $pwd=md5($pwd);
+                $sql = "UPDATE users SET username='$username', phone='$phone',twitter='$twitter',instagram='$instagram',facebook='$facebook', pwd='$pwd' WHERE ID='$user_id'";
+            }   
+            mysqli_query($mysql_db, $sql);
         }
         break;
     }

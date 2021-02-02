@@ -27,9 +27,9 @@ $result = mysqli_query($mysql_db, $sql);
     cursor:pointer;
 }
 </style>
-<div style='background:#fff; margin:20px; opacity:0.9;'>
+<div style='opacity:0.9;'  class='container'>
     <div style='padding:20px;overflow:hidden'>
-        <h3>Add / Edit / Remove tag</h3>
+        <h3 style='color:#ddd'>Add / Edit / Remove tag</h3>
         <div style='margin:10px;'>
             <input type="button" class='btn' data-toggle="modal" data-target="#addTagModal" id='add_tag' value='Add new tag'/>
         </div>

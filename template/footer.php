@@ -215,7 +215,7 @@ else
     </div>
   </div>
 </div>
-<div class="modal fade" id="addGenreModal" tabindex="-1" role="dialog"aria-hidden="true">
+<div class="modal fade" id="addGenreModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -234,7 +234,7 @@ else
     </div>
   </div>
 </div>
-<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog"aria-hidden="true">
+<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -248,6 +248,57 @@ else
       </div>
       <div class="modal-footer">        
         <button type="button" class="btn btn-primary" data-dismiss="modal" id='save_tag'>Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="GameLinkModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Current game link: </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <input type="text" class="form-control" id='game_link' value="" />
+      </div>
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id='copylink'>Copy Link</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="ReportModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Reason for reporting? </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <textarea class="form-control" id='txtReport'></textarea>
+      </div>
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id='sendreportto'>Send Report</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="QuestionModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">      
+      <div class="modal-body">
+      Do you want to add this game to your favorite list?
+      </div>
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id='addtofavorite'>Add</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -523,6 +574,40 @@ else
               $("#show_all").parent().fadeIn(1);
         }});   
     })
+    $("#copylink").on("click", function() {
+      var copyText = document.getElementById("game_link");
+      /* Select the text field */
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+      /* Copy the text inside the text field */
+      document.execCommand("copy");
+      toastr['info']("Copied to clipboard.");
+    });
+    $("#sendreportto").on('click', function() {
+        var con = $("#txtReport").val();
+        $.ajax({url: "./database.php", 
+            data : {
+              "do":"send_report",
+              "data" : con
+            },
+            type : "post",
+            success: function(result){
+              toastr['info']("Report sent.");
+        }});   
+    })
+    $("#addtofavorite").on('click', function() {
+        var rid = $("#hid_rid").val();
+        $.ajax({url: "./database.php", 
+            data : {
+              "do":"add_to_favor",
+              "rid" : rid
+            },
+            type : "post",
+            success: function(result){
+              toastr['info']("Successfully saved. You can check it in your favorite list.");
+        }});   
+    })
 <?php if($priv != 0) :?>
   $("#upload_data").on('click', function() {
     $.ajax({url: "./pages/add.php", 
@@ -562,6 +647,18 @@ else
     $(".nav-item").removeClass("active");
     $(this).parents("li").addClass("active");      
   })
+  $("#show_fav").on('click', function() {
+    $.ajax({url: "./pages/manage_favs.php", 
+        data : {
+          
+        },
+        type : "post",
+        success: function(result){
+          $("#main_body").html(result);  
+    }}); 
+    $(".nav-item").removeClass("active");
+    $(this).parents("li").addClass("active");      
+  })
 <?php endif;?>
 <?php if($priv==ADMIN) :?>
   $("#managegenres").on('click', function() {
@@ -579,6 +676,19 @@ else
   })
   $("#managetags").on('click', function() {
     $.ajax({url: "./pages/manage_tag.php", 
+        data : {
+          
+        },
+        type : "post",
+        success: function(result){
+          $("#main_body").html(result);	
+          $(window).trigger('resize');   
+    }});   
+    $(".nav-item").removeClass("active");
+       $(this).parents("li").addClass("active");    
+  })
+  $("#manageusers").on('click', function() {
+    $.ajax({url: "./pages/manage_user.php", 
         data : {
           
         },

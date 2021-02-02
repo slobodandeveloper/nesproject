@@ -1,9 +1,11 @@
 <?php
     session_start();
-    if(!isset($_SESSION['route']))
-        die('Direct Access is forbidden');
-
     include_once "mysql.php";
+    if(isset($_SESSION['priv']))
+        $priv = $_SESSION['priv'];
+    else
+        $priv = 0;
+
     $packrom = $rom = $mysql_db->real_escape_string($_POST['rom']);
     $rom = base64_decode($rom);
     $sql = "SELECT * FROM games WHERE ID='$rom'";
@@ -67,6 +69,7 @@ imagejpeg($resized, "RESIZED.jpg");
 
 ?>
 <input type='hidden' id='hid_path' value='<?php echo $rompath;?>'/>
+<input type='hidden' id='hid_rid' value='<?php echo $rom;?>'/>
 <div class='row'>
     <div class='col-md-5 col-76812' style='padding:30px;'>
         <div>
@@ -74,12 +77,13 @@ imagejpeg($resized, "RESIZED.jpg");
             <div class="dropdown">
                 <button onclick="myFunction()" class="dropbtn"><i class='fa fa-angle-down'></i>&nbsp;Options</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a>Rate this game</a>
-                    <a>Leave feedback</a>
-                    <a>Add to favorite</a>
-                    <a>Report</a>
+                <?php if($priv != 0):?>
+                    <a id='ratefeedback'>Rate & feedback</a>
+                    <a id='addtofavor'>Add to favorite</a>
+                    <a id='sendReport'>Report</a>
                     <a>Share with Social</a>
-                    <a>Get game link</a>
+                <?php endif;?>
+                    <a id='getGameLink'>Get game link</a>
                 </div>
             </div>
         </div>
@@ -171,6 +175,40 @@ imagejpeg($resized, "RESIZED.jpg");
     $("#get_demo").on("click", function() {
         $("#download_frame").attr("src","./download.php?g=demo&i=<?php echo $packrom;?>");
     });
+    $("#ratefeedback").on("click", function() {
+<?php if($priv == PROPLAYER || $priv == PROPLAYER+CREATOR || $priv == ADMIN):?>
+        var r = $("#hid_rid").val();
+        $.ajax({url: "./pages/rating.php", 
+        data : {
+            "r" : r,
+        },
+        type : "post",
+        success: function(result){
+            $("#main_body").html(result);	
+        }});         
+<?php else:?>
+    toastr['error']("Please become pro player.");    
+<?php endif;?>
+    });
+    $("#getGameLink").on("click", function() {
+        var r = $("#hid_rid").val();
+        $.ajax({url: "./database.php", 
+        data : {
+            "do" : "getgamelink",
+            "val" : r
+        },
+        type : "post",
+        success: function(result){
+            $("#game_link").val(result);	
+            $("#GameLinkModal").modal("show");
+        }});         
+    })
+    $("#sendReport").on("click", function() {
+        $("#ReportModal").modal("show");               
+    })
+    $("#addtofavor").on("click", function() {
+        $("#QuestionModal").modal("show");               
+    })
     function myFunction() {
         document.getElementById("myDropdown").classList.toggle("show");
     }

@@ -27,9 +27,9 @@ $result = mysqli_query($mysql_db, $sql);
     cursor:pointer;
 }
 </style>
-<div style='background:#fff; margin:20px; opacity:0.9;'>
+<div style='opacity:0.9;' class='container'>
     <div style='padding:20px;overflow:hidden'>
-        <h3>Add / Edit / Remove Genre</h3>
+        <h3  style='color:#ddd'>Add / Edit / Remove Genre</h3>
         <div style='margin:10px;'>
             <input type="button" class='btn' data-toggle="modal" data-target="#addGenreModal" id='add_gen' value='Add new genre'/>
         </div>

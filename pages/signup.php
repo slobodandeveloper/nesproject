@@ -30,7 +30,7 @@
                 <span class="focus-input101" data-placeholder="Nesmaker License Code"></span>
             </div>
             <div class="wrap-input101 validate-input m-b-50" data-validate="Enter Password">
-                <input class="input101" type="text" id='licensepwd' name="licensepwd" >
+                <input class="input101" type="password" id='licensepwd' name="licensepwd" >
                 <span class="focus-input101" data-placeholder="License password"></span>
             </div>
             <div class="wrap-input100 validate-input m-b-50" id='error_div' style='color:red; display:none'>

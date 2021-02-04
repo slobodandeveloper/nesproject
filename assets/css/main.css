@@ -1254,3 +1254,7 @@ thead tr {
         transform: rotate(360deg);
     }
 }
+
+.btn-primary {
+    background-color: #595a5b !important;
+}

@@ -7,15 +7,16 @@ if(!isset($_SESSION['priv']))
 $priv = $_SESSION['priv'];
 include_once "../mysql.php";
 $row = getUserInformation();
+$priv = $row['priv'];
 if($priv == ADMIN)
     $ustr = "Administrator";
 else if($priv == PLAYER)
     $ustr = "Player";
 else if($priv == PROPLAYER)
     $ustr = "Pro player";
-else if($priv == PLAYER + CREATOR)
+else if($priv == (PLAYER + CREATOR))
     $ustr = "Player, Creator";
-else if($priv == PROPLAYER + CREATOR)
+else if($priv == (PROPLAYER + CREATOR))
     $ustr = "Pro Player, Creator";
 else
     $ustr = "Guest";
@@ -69,9 +70,12 @@ else {
               <div class="mt-3">
                 <h4><?php echo $row['username'];?></h4>                
                 <p class="text-secondary mb-1"><?php echo $ustr;?></p>               
-                <button id='update_profile' class="btn btn-primary">Save profile</button>
-                <?php if(!($priv == PROPLAYER || $priv==PROPLAYER+CREATOR)) :?>
-                  <button id='upgrade_to_pro' class="btn btn-outline-primary">Upgrade to Pro</button>
+                
+                <?php if(!($priv == PROPLAYER || $priv==PROPLAYER+CREATOR || $priv == ADMIN)) :?>
+                  <button id='upgrade_to_pro' class="btn btn-primary">Upgrade to Pro</button>
+                <?php endif;?>
+                <?php if($priv < CREATOR && $priv != ADMIN) :?>
+                  <button id='upgrade_to_creator' class="btn btn-primary">Upgrade to Creator</button>
                 <?php endif;?>
               </div>
               <input type='hidden' name='upload_type' value="profile_image"/>
@@ -93,7 +97,11 @@ else {
               <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
               <span class="text-secondary"><input type='text' id='facebook' type='text' class='form-control default-theme' value="<?php echo $row['facebook'];?>"/></span>
             </li>
+            <li style='text-align:center; margin-top:15px;'>
+            <button id='update_profile' class="btn btn-primary">Save profile</button>
+            </li>
           </ul>
+          
         </div>
       </div>
       <div class="col-md-8">
@@ -182,8 +190,10 @@ function uploadDone() {
     return;
   $("#avatar_image").attr("src", v);
 }
+$("#upgrade_to_creator").click(function() {
+  $("#BecomeCreator").modal("show");
+});
 $("#update_profile").click(function(e) {
-  alert("bbbb");
   var phone = $("#phone").val();
   var pwd = $("#pwd").val();
   var confirm = $("#confirm").val();

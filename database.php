@@ -200,21 +200,14 @@ if (!empty($_POST))
             } catch (Exception $e) {
             }
             break;
-        case "signup":
-            $email = $mysql_db->real_escape_string(inputParam('email'));
-            $password = $mysql_db->real_escape_string(inputParam('password'));
-            $username = $mysql_db->real_escape_string(inputParam('username'));
-            $license = $mysql_db->real_escape_string(inputParam('license'));
+        case "becomecreator":
+            $user_id = $_SESSION['user_id'];
+            $license = $mysql_db->real_escape_string(inputParam('licenseid'));
             $licensepwd = $mysql_db->real_escape_string(inputParam('licensepwd'));
-            $password = md5($password);
-            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-            $priv = PLAYER;
-            //if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            //    die("-1");
-            //}
             if($license != "" && $licensepwd != "") {
-                $url = "https://api.softworkz.com/v1/licenses/P0003024/YMM5GRXQPNUAH435";
-                $data = array('licensepassword' => 'Nothing0', 'UserIp' => '10.10.10.10');
+                $url = "https://api.softworkz.com/v1/licenses/P0003024/".$license;
+                $data = array('licensepassword' => $licensepwd, 'UserIp' => '10.10.10.10');
+                
                 $data_string = json_encode($data);
                 $apikey = "Basic ".base64_encode("C0001955:APISV4D47J39FTCNQU2JKX4");
 
@@ -233,6 +226,60 @@ if (!empty($_POST))
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // On dev server only!
                 $result = curl_exec($ch);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+               // die($result.$httpcode."aa");
+                if($result != "" && $httpcode == 200) {
+                    $sql = "SELECT priv FROM users WHERE ID='$user_id'";
+                    $result = mysqli_query($mysql_db, $sql); 
+                    $row = $result->fetch_assoc();
+                    $priv = (int)($row['priv']);
+                    $priv = $priv + CREATOR;
+                    $sql = "UPDATE users SET priv='$priv' WHERE ID='$user_id'";
+                    mysqli_query($mysql_db, $sql);
+                    die("1");
+                }
+                else{
+                    die("0");
+                }
+            }
+            else {
+                die("0");
+            }
+            break;
+        case "signup":
+            $email = $mysql_db->real_escape_string(inputParam('email'));
+            $password = $mysql_db->real_escape_string(inputParam('password'));
+            $username = $mysql_db->real_escape_string(inputParam('username'));
+            $license = $mysql_db->real_escape_string(inputParam('license'));
+            $licensepwd = $mysql_db->real_escape_string(inputParam('licensepwd'));
+            $password = md5($password);
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+            $priv = PLAYER;
+            //if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            //    die("-1");
+            //}
+            if($license != "" && $licensepwd != "") {
+                $url = "https://api.softworkz.com/v1/licenses/P0003024/".$license;
+                $data = array('licensepassword' => '$licensepwd', 'UserIp' => '10.10.10.10');
+                $data_string = json_encode($data);
+                $apikey = "Basic ".base64_encode("C0001955:APISV4D47J39FTCNQU2JKX4");
+
+                //$postfields = array('field1'=>'value1', 'field2'=>'value2');
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                // Edit: prior variable $postFields should be $postfields;
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+                    'Authorization:'.$apikey,
+                    'Content-Type: application/json',                                                                                
+                    'Content-Length: ' . strlen($data_string))                                                                       
+                );
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // On dev server only!
+                $result = curl_exec($ch);
+                
                 $priv = PLAYER + CREATOR;
             }
 

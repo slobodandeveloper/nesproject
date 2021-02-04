@@ -323,6 +323,26 @@ else
     </div>
   </div>
 </div>
+<div class="modal fade" id="BecomeCreator" tabindex="-1" role="dialog"aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Enter your Nesmaker License code and password. </h4>
+        <button type="button" class="close" data-dismiss="modal" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <input type="text" class="form-control" name='licenseid' id='licenseid' placeholder="Nesmaker License ID" value="" />
+      <input style='margin-top:10px;' type="password" class="form-control" name='licensepwd' id='licensepwd' placeholder="License password" value="" />
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id='send_license'>Submit</button>        
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
 	window.isDebug = location.href.match(/debug=1$/i) ? true : false;
 	function loadfile(event) {
@@ -579,7 +599,7 @@ else
     })
     $("#show_all").on('click', function() {
       showProgress();
-        ({url: "./pages/all_games.php", 
+      $.ajax({url: "./pages/all_games.php", 
             data : {
             },
             type : "post",
@@ -679,6 +699,34 @@ else
     $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");  
   })
+  $("#send_license").on('click', function() {
+    var licenseid=$("#licenseid").val();
+    var licensepwd=$("#licensepwd").val();
+    if(licenseid == "" || licensepwd == "") {
+      toastr['error']("Please input correct id and password.");
+      return;
+    }
+    showProgress();
+    $.ajax({url: "./database.php", 
+        data : {
+          "do" : "becomecreator",
+          "licenseid": licenseid,
+          "licensepwd": licensepwd
+        },
+        type : "post",
+        success: function(result){
+          if(result == "0") {
+            toastr['error']("License ID or password not match.");
+          }
+          else {
+            toastr['info']("Updated.");
+          }
+          hideProgress();         
+             
+    }});
+    $(".nav-item").removeClass("active");
+       $(this).parents("li").addClass("active");  
+  })
   $("#managegames").on('click', function() {
     showProgress();
     $.ajax({url: "./pages/manage_game.php", 
@@ -695,7 +743,8 @@ else
        $(this).parents("li").addClass("active");      
   })
   $("#manageprofile").on('click', function() {
-    ({url: "./pages/manage_profile.php", 
+    showProgress();
+    $.ajax({url: "./pages/manage_profile.php", 
         data : {
           
         },

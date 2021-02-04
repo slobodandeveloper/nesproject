@@ -53,10 +53,12 @@
         var confirm = $("#confirm").val();
         var license = $("#license").val();
         var licensepwd = $("#licensepwd").val();
+        
         if(confirm != password) {
             toastr['error']("Confirm password is not match.");
             return;
         }
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "signup",
@@ -68,6 +70,7 @@
             },
             type : "post",
             success: function(result){   
+                hideProgress();
                if(result == "0"){
                     $("#error_div").fadeIn(300);
                }    

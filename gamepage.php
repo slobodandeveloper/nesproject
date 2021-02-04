@@ -187,12 +187,14 @@ imagejpeg($resized, "RESIZED.jpg");
     $("#ratefeedback").on("click", function() {
 <?php if($priv == PROPLAYER || $priv == (PROPLAYER+CREATOR) || $priv == ADMIN):?>
         var r = $("#hid_rid").val();
+        showProgress();
         $.ajax({url: "./pages/rating.php", 
         data : {
             "r" : r,
         },
         type : "post",
         success: function(result){
+            hideProgress();
             $("#main_body").html(result);	
         }});         
 <?php else:?>
@@ -201,6 +203,7 @@ imagejpeg($resized, "RESIZED.jpg");
     });
     $("#getGameLink").on("click", function() {
         var r = $("#hid_rid").val();
+        showProgress();
         $.ajax({url: "./database.php", 
         data : {
             "do" : "getgamelink",
@@ -208,6 +211,7 @@ imagejpeg($resized, "RESIZED.jpg");
         },
         type : "post",
         success: function(result){
+            hideProgress();
             $("#game_link").val(result);	
             $("#GameLinkModal").modal("show");
         }});         

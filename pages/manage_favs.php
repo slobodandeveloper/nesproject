@@ -116,24 +116,28 @@ $result = mysqli_query($mysql_db, $sql);
         leaps: true         // next/prev leaps through maxVisible
     }).on("page", function(event, num){        	
         num = num -1;
+        showProgress();
         $.ajax({url: "./pages/manage_favs.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+            hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }});    
     });
     $("#exampleg").on('click', '.play-btn',function() {
         var rom = $(this).attr("data");
+        showProgress();
         $.ajax({url: "./gamepage.php", 
             data : {
                 "rom" : rom					
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 $("#main_body").html(result);	
                 let rom_path = $("#hid_path").val();
                 loadfileName(rom_path);				
@@ -142,6 +146,7 @@ $result = mysqli_query($mysql_db, $sql);
     $(".delete_game").on("click", function() {
         var id = $(this).attr("data");        
         var pa = $(this).parents("tr");
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "removefavs",
@@ -153,6 +158,7 @@ $result = mysqli_query($mysql_db, $sql);
                 .row( pa )
                 .remove()
                 .draw();
+                hideProgress();
                 toastr['success']("Deleted successfully.");                
         }});    
     });

@@ -208,9 +208,32 @@ if (!empty($_POST))
             $licensepwd = $mysql_db->real_escape_string(inputParam('licensepwd'));
             $password = md5($password);
             $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-            
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                die("-1");
+            $priv = PLAYER;
+            //if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            //    die("-1");
+            //}
+            if($license != "" && $licensepwd != "") {
+                $url = "https://api.softworkz.com/v1/licenses/P0003024/YMM5GRXQPNUAH435";
+                $data = array('licensepassword' => 'Nothing0', 'UserIp' => '10.10.10.10');
+                $data_string = json_encode($data);
+                $apikey = "Basic ".base64_encode("C0001955:APISV4D47J39FTCNQU2JKX4");
+
+                //$postfields = array('field1'=>'value1', 'field2'=>'value2');
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                // Edit: prior variable $postFields should be $postfields;
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+                    'Authorization:'.$apikey,
+                    'Content-Type: application/json',                                                                                
+                    'Content-Length: ' . strlen($data_string))                                                                       
+                );
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // On dev server only!
+                $result = curl_exec($ch);
+                $priv = PLAYER + CREATOR;
             }
 
             $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE email='$email'");
@@ -219,7 +242,7 @@ if (!empty($_POST))
                 die ("-2");
             }        
             $emailcode = rand(1000000, 10000000);
-            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`,`avatar_path`) VALUES('$username', '$email','$emailcode','0', '$password','2','1','./assets/img/default.png')";
+            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`,`avatar_path`) VALUES('$username', '$email','$emailcode','0', '$password','$priv','1','./assets/img/default.png')";
             $result = mysqli_query($mysql_db, $sql);
             //die($sql);
             try {

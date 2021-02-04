@@ -142,12 +142,14 @@ $result = mysqli_query($mysql_db, $sql);
         leaps: true         // next/prev leaps through maxVisible
     }).on("page", function(event, num){        	
         num = num -1;
+        showProgress();
         $.ajax({url: "./pages/manage_game.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+            hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }});    
@@ -155,6 +157,7 @@ $result = mysqli_query($mysql_db, $sql);
     $(".edit_game").on("click", function() {
         var id = $(this).attr("data");
         var num =  $("#current_page").val();
+        showProgress();
         $.ajax({url: "./pages/edit_game.php", 
             data : {
                 "id":id,
@@ -162,6 +165,7 @@ $result = mysqli_query($mysql_db, $sql);
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 $("#main_body").html(result);	
                 
         }});    
@@ -169,6 +173,7 @@ $result = mysqli_query($mysql_db, $sql);
     $(".delete_game").on("click", function() {
         var id = $(this).attr("data");        
         var pa = $(this).parents("tr");
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "removegame",
@@ -180,6 +185,7 @@ $result = mysqli_query($mysql_db, $sql);
                 .row( pa )
                 .remove()
                 .draw();
+                hideProgress();
                 toastr['success']("Deleted successfully.");                
         }});    
     });

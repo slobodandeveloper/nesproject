@@ -110,12 +110,14 @@ $result = mysqli_query($mysql_db, $sql);
         });
     } );
     function reloadpage(num) {
+        showProgress();
         $.ajax({url: "./pages/manage_user.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+            hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }});   
@@ -131,7 +133,7 @@ $result = mysqli_query($mysql_db, $sql);
     });
     function changePriv(id) {
         var newpriv = $("#prv-"+id).val();
-
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "changepriv",
@@ -140,11 +142,13 @@ $result = mysqli_query($mysql_db, $sql);
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 toastr['success']("Successfully saved.");    
         }});   
     }
     function changeStat(id) {
         var newstt = $("#stt-"+id).val();
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "changestt",
@@ -152,13 +156,15 @@ $result = mysqli_query($mysql_db, $sql);
                 "stt":newstt
             },
             type : "post",
-            success: function(result){               
+            success: function(result){ 
+                hideProgress();              
                 toastr['success']("Successfully saved.");                
         }});   
     }
     $(".delete_user").on("click", function() {
         var id = $(this).attr("data");        
         var pa = $(this).parents("tr");
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "removeuser",
@@ -170,6 +176,7 @@ $result = mysqli_query($mysql_db, $sql);
                 .row( pa )
                 .remove()
                 .draw();
+                hideProgress();
                 toastr['success']("Deleted successfully.");                
         }});   
     });

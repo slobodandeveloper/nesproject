@@ -195,6 +195,7 @@ $("#update_profile").click(function(e) {
   var instagram = $("#instagram").val();
   var facebook = $("#facebook").val();
   var username = $("#username").val();
+  showProgress();
   $.ajax({url: "./database.php", 
         data : {
           "do":"update_profile",
@@ -207,7 +208,7 @@ $("#update_profile").click(function(e) {
         },
         type : "post",
         success: function(result){
-          
+          hideProgress();
     }}); 
 });
 </script>

@@ -538,56 +538,66 @@ else
     })  
     
     $("#login_pro").on('click', function() {
+      showProgress();
         $.ajax({url: "./pages/login.php", 
             data : {
             },
             type : "post",
             success: function(result){
+              hideProgress();
                 $("#main_body").html(result);	
         }});
        $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");     
     })
     $("#login_out").on('click', function() {
+      showProgress();
         $.ajax({url: "./database.php", 
             data : {
               "do":"login_out"
             },
             type : "post",
             success: function(result){
+              hideProgress();
                 location.href = "./";
         }});
        $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");     
     })
     $("#signup_pro").on('click', function() {
+      showProgress();
         $.ajax({url: "./pages/signup.php", 
             data : {
             },
             type : "post",
             success: function(result){
+              hideProgress();
                 $("#main_body").html(result);	
         }});
        $(".nav-item").removeClass("active");
        $(this).parents("li").addClass("active");     
     })
     $("#show_all").on('click', function() {
-        $.ajax({url: "./pages/all_games.php", 
+      showProgress();
+        ({url: "./pages/all_games.php", 
             data : {
             },
             type : "post",
             success: function(result){
+              hideProgress();
               $("#main_body").html(result);	
               $("#show_all").parent().fadeOut(1);
               $("#show_col").parent().fadeIn(1);              
         }});   
     })
     $("#show_col").on('click', function() {
+      showProgress();
         $.ajax({url: "./pages/show_collections.php", 
             data : {
             },
             type : "post",
             success: function(result){
+              hideProgress();
               $("#main_body").html(result);	
               $("#show_col").parent().fadeOut(1);
               $("#show_all").parent().fadeIn(1);
@@ -605,6 +615,7 @@ else
     });
     $("#sendreportto").on('click', function() {
         var con = $("#txtReport").val();
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
               "do":"send_report",
@@ -612,11 +623,13 @@ else
             },
             type : "post",
             success: function(result){
+              hideProgress();
               toastr['info']("Report sent.");
         }});   
     })
     $("#addtofavorite").on('click', function() {
         var rid = $("#hid_rid").val();
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
               "do":"add_to_favor",
@@ -624,22 +637,26 @@ else
             },
             type : "post",
             success: function(result){
+              hideProgress();
               toastr['info']("Successfully saved. You can check it in your favorite list.");
         }});   
     })
     $("#play_random").on('click', function() {
+      showProgress();
         $.ajax({url: "./database.php", 
             data : {
               "do":"get_random"
             },
             type : "post",
             success: function(result){
+             
               $.ajax({url: "./gamepage.php", 
                   data : {
                       "rom" : result					
                   },
                   type : "post",
                   success: function(result){
+                    hideProgress();
                       $("#main_body").html(result);	
                       let rom_path = $("#hid_path").val();
                       loadfileName(rom_path);				
@@ -648,12 +665,14 @@ else
     })
 <?php if($priv != 0) :?>
   $("#upload_data").on('click', function() {
+    showProgress();
     $.ajax({url: "./pages/add.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);	
              
     }});
@@ -661,12 +680,14 @@ else
        $(this).parents("li").addClass("active");  
   })
   $("#managegames").on('click', function() {
+    showProgress();
     $.ajax({url: "./pages/manage_game.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');   
     }}); 
@@ -674,24 +695,27 @@ else
        $(this).parents("li").addClass("active");      
   })
   $("#manageprofile").on('click', function() {
-    $.ajax({url: "./pages/manage_profile.php", 
+    ({url: "./pages/manage_profile.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);  
     }}); 
     $(".nav-item").removeClass("active");
     $(this).parents("li").addClass("active");      
   })
   $("#show_fav").on('click', function() {
+    showProgress();
     $.ajax({url: "./pages/manage_favs.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);  
     }}); 
     $(".nav-item").removeClass("active");
@@ -700,12 +724,14 @@ else
 <?php endif;?>
 <?php if($priv==ADMIN) :?>
   $("#managegenres").on('click', function() {
+    showProgress();
     $.ajax({url: "./pages/manage_genre.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');   
     }});   
@@ -713,12 +739,14 @@ else
        $(this).parents("li").addClass("active");    
   })
   $("#managetags").on('click', function() {
+    showProgress();
     $.ajax({url: "./pages/manage_tag.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');   
     }});   
@@ -726,12 +754,14 @@ else
        $(this).parents("li").addClass("active");    
   })
   $("#manageuser").on('click', function() {
+    showProgress();
     $.ajax({url: "./pages/manage_user.php", 
         data : {
           
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');   
     }});   
@@ -748,6 +778,7 @@ else
           toastr['error']('Input verification code.');
           return;
         }
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "everification",
@@ -756,7 +787,7 @@ else
             },
             type : "post",
             success: function(result){
-              console.log(result);   
+              hideProgress();
                if(result == "0"){
                   toastr['error']("Verification code not matched.");
                   return;
@@ -775,6 +806,7 @@ else
           toastr['error']('Invalid Email address.');
           return;
         }
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "resend",
@@ -783,9 +815,15 @@ else
             type : "post",
             success: function(result){
                 toastr['success']("Sent");
-              
+              hideProgress();
         }});
     });
+function showProgress() {
+  $(".lds-roller").css("display","block");
+}
+function hideProgress() {
+  $(".lds-roller").css("display","none");
+}
 </script>
 </body>
 </html>

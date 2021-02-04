@@ -111,7 +111,7 @@ $allcount = getAllGameCount();
         developer=$("#hid_dev").val();
         sort=$("#hid_sort").val();
         var w = $("#icon_view_div").width();
- 
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "load_icon",
@@ -127,6 +127,7 @@ $allcount = getAllGameCount();
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 $("#icon_views").html(result);
                 var val = $("#hid_allp").val();
                 var cval = $("#hid_allc").val();
@@ -146,7 +147,7 @@ $allcount = getAllGameCount();
         genre = $("#hid_gen").val();
         developer=$("#hid_dev").val();
         sort=$("#hid_sort").val();
-        console.log(num);
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "load_table",
@@ -160,7 +161,8 @@ $allcount = getAllGameCount();
                 "sort":sort
             },
             type : "post",
-            success: function(result){					
+            success: function(result){	
+                hideProgress();				
                 dtable.clear().draw();
                 dtable.rows.add($(result)).draw();
                 window.scrollTo(0,document.body.scrollHeight);
@@ -202,12 +204,14 @@ $allcount = getAllGameCount();
     });
     $("#icon_view_div").on('click', '.select-picture',function() {
         var rom = $(this).attr("data");
+        showProgress();
         $.ajax({url: "./gamepage.php", 
             data : {
                 "rom" : rom					
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 $("#main_body").html(result);	
                 let rom_path = $("#hid_path").val();
                 loadfileName(rom_path);				
@@ -216,12 +220,14 @@ $allcount = getAllGameCount();
     
     $("#table_view_div").on('click', '.play-btn',function() {
         var rom = $(this).attr("data");
+        showProgress();
         $.ajax({url: "./gamepage.php", 
             data : {
                 "rom" : rom					
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 $("#main_body").html(result);	
                 let rom_path = $("#hid_path").val();
                 loadfileName(rom_path);				

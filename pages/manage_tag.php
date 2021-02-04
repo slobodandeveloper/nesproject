@@ -80,12 +80,14 @@ $result = mysqli_query($mysql_db, $sql);
         });
     } );
     function reloadpage(num) {
+        showProgress();
         $.ajax({url: "./pages/manage_tag.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+            hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }});   
@@ -102,6 +104,7 @@ $result = mysqli_query($mysql_db, $sql);
     $("#addTagModal").on("click", "#save_tag", function() {
         var tagid = $("#hid_tagid").val();
         var tagname = $("#newtag").val();
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "tag",
@@ -110,6 +113,7 @@ $result = mysqli_query($mysql_db, $sql);
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 if(tagid == "0") {
                     dtable.row.add($("<tr><td>" +result+ "</td><td>"+tagname+"</td><td><a class='edit_tag' data='"+result+"' data-toggle='modal' data-target='#addTagModal'><i class='fa fa-edit'></i></a></td><td><a class='delete_tag' data='"+result+"'><i class='fa fa-trash'></i></a></td></tr>")).draw();
                 }
@@ -134,6 +138,7 @@ $result = mysqli_query($mysql_db, $sql);
     $(".delete_tag").on("click", function() {
         var id = $(this).attr("data");        
         var pa = $(this).parents("tr");
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "removetag",
@@ -145,6 +150,7 @@ $result = mysqli_query($mysql_db, $sql);
                 .row( pa )
                 .remove()
                 .draw();
+                hideProgress();
                 toastr['success']("Deleted successfully.");                
         }});   
     });

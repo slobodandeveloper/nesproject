@@ -32,6 +32,7 @@
     $(".login100-form-btn").click(function(e) {
         var username = $("#email").val();
         var password = $("#password").val();
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "login",
@@ -40,6 +41,7 @@
             },
             type : "post",
             success: function(result){   
+                hideProgress();
                if(result == "0"){
                 $("#error_div").html("Email address or password not correct!");
                     $("#error_div").fadeIn(300);

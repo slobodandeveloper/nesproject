@@ -233,12 +233,14 @@ $result2 = mysqli_query($mysql_db, $sql);
     }
     $("#back_to_game").on("click", function() {
         var num = $("#hid_page").val();
+        showProgress();
         $.ajax({url: "./pages/manage_game.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+            hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }})

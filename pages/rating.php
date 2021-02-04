@@ -197,6 +197,7 @@ $result = mysqli_query($mysql_db, $sql);
                 score++;
         }
         var gid = <?php echo $r;?>;
+        showProgress();
         $.ajax({url: "./database.php", 
         data : {
           "do" : "rating",
@@ -206,16 +207,19 @@ $result = mysqli_query($mysql_db, $sql);
         },
         type : "post",
         success: function(result){
+          hideProgress();
             toastr['info']("Successfully saved.");
         }});
     });
     function reloadpage(num) {
+      showProgress();
         $.ajax({url: "./pages/rating.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+          hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }});   

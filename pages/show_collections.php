@@ -17,7 +17,8 @@ if(!isset($_SESSION['route']))
     var curpage = 0;
     function adjust_pictures() {
         var w = $("#collections_div").width();
-        var h = $("#collections_div").height();        
+        var h = $("#collections_div").height(); 
+        showProgress();       
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "load_collections",
@@ -26,7 +27,8 @@ if(!isset($_SESSION['route']))
                 "page" : curpage
             },
             type : "post",
-            success: function(result){                
+            success: function(result){  
+                hideProgress();              
                 $("#collections_div").html(result);              
                 
         }});
@@ -39,6 +41,7 @@ if(!isset($_SESSION['route']))
         curpage--;
         var w = $("#collections_div").width();
         var h = $("#collections_div").height();        
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "load_collections",
@@ -47,7 +50,8 @@ if(!isset($_SESSION['route']))
                 "page" : curpage
             },
             type : "post",
-            success: function(result){                
+            success: function(result){ 
+                hideProgress();              
                 $("#collections_div").html(result);              
                 
         }});
@@ -55,7 +59,8 @@ if(!isset($_SESSION['route']))
     $("#right_collect").on("click", function() {
         curpage++;
         var w = $("#collections_div").width();
-        var h = $("#collections_div").height();        
+        var h = $("#collections_div").height();
+        showProgress();     
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "load_collections",
@@ -64,7 +69,8 @@ if(!isset($_SESSION['route']))
                 "page" : curpage
             },
             type : "post",
-            success: function(result){                
+            success: function(result){     
+                hideProgress();           
                 $("#collections_div").html(result);              
                 
         }});
@@ -72,12 +78,14 @@ if(!isset($_SESSION['route']))
     
     $("#collections_div").on('click', '.select-picture',function() {
         var rom = $(this).attr("data");
+        showProgress();
         $.ajax({url: "./gamepage.php", 
             data : {
                 "rom" : rom					
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 $("#main_body").html(result);	
                 let rom_path = $("#hid_path").val();
                 loadfileName(rom_path);				

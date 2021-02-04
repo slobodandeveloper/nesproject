@@ -15,6 +15,14 @@
     })
 
 
+    $(".validate-form").on("blur", "input.input101", function() {
+        if ($(this).val().trim() != "") {
+            $(this).addClass('has-val');
+        } else {
+            $(this).removeClass('has-val');
+        }
+    })
+
     /*==================================================================
     [ Validate ]*/
     var input = $('.validate-input .input100');

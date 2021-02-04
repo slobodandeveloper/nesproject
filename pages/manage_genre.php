@@ -80,12 +80,14 @@ $result = mysqli_query($mysql_db, $sql);
         });
     } );
     function reloadpage(num) {
+        showProgress();
         $.ajax({url: "./pages/manage_genre.php", 
         data : {
           "pagenum" : num
         },
         type : "post",
         success: function(result){
+            hideProgress();
           $("#main_body").html(result);	
           $(window).trigger('resize');  
         }});   
@@ -102,6 +104,7 @@ $result = mysqli_query($mysql_db, $sql);
     $("#addGenreModal").on("click", "#save_genre", function() {
         var genid = $("#hid_genid").val();
         var genname = $("#newgenre").val();
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "genre",
@@ -110,6 +113,7 @@ $result = mysqli_query($mysql_db, $sql);
             },
             type : "post",
             success: function(result){
+                hideProgress();
                 if(genid == "0") {
                     dtable.row.add($("<tr><td>" +result+ "</td><td>"+genname+"</td><td><a class='edit_genre' data='"+result+"' data-toggle='modal' data-target='#addGenreModal'><i class='fa fa-edit'></i></a></td><td><a class='delete_genre' data='"+result+"'><i class='fa fa-trash'></i></a></td></tr>")).draw();
                 }
@@ -134,6 +138,7 @@ $result = mysqli_query($mysql_db, $sql);
     $(".delete_genre").on("click", function() {
         var id = $(this).attr("data");        
         var pa = $(this).parents("tr");
+        showProgress();
         $.ajax({url: "./database.php", 
             data : {
                 "do" : "removegenre",
@@ -145,6 +150,7 @@ $result = mysqli_query($mysql_db, $sql);
                 .row( pa )
                 .remove()
                 .draw();
+                hideProgress();
                 toastr['success']("Deleted successfully.");                
         }});   
     });

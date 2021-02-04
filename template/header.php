@@ -184,7 +184,7 @@ include_once "./mysql.php";
     $genres = getGenre();
     $allcount = getAllGameCount();
     ?>
-
+<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 <div id='main_body' class='container-fluid'>
     <?php
     $url = isset($_GET['g']) ? $_GET['g'] : "";
@@ -201,12 +201,14 @@ if($url != ""):
 <script>
 $(document).ready(function() {
     var rom = <?php echo '"'.$rom.'"';?>;
+    showProgress();
     $.ajax({url: "./gamepage.php", 
         data : {
             "rom" : rom					
         },
         type : "post",
         success: function(result){
+            hideProgress();
             $("#main_body").html(result);	
             let rom_path = $("#hid_path").val();
             loadfileName(rom_path);				

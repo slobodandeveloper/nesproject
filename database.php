@@ -183,7 +183,7 @@ if (!empty($_POST))
                 $mailer->Host = 'nesemutest.com';
                 $mailer->SMTPAuth = true;
                 $mailer->Username = 'retroverse@nesemutest.com';
-                $mailer->Password = 'G]_8c$jD4Tlw';
+                $mailer->Password = 'a].,jcs$~-kt';
                 $mailer->SMTPSecure = 'tls';
                 $mailer->Port = 587;
             
@@ -207,7 +207,8 @@ if (!empty($_POST))
             if($license != "" && $licensepwd != "") {
                 $url = "https://api.softworkz.com/v1/licenses/P0003024/".$license;
                 $data = array('licensepassword' => $licensepwd, 'UserIp' => '10.10.10.10');
-                
+                //print_r($data);
+                //die($url);
                 $data_string = json_encode($data);
                 $apikey = "Basic ".base64_encode("C0001955:APISV4D47J39FTCNQU2JKX4");
 
@@ -227,7 +228,7 @@ if (!empty($_POST))
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // On dev server only!
                 $result = curl_exec($ch);
                 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-               // die($result.$httpcode."aa");
+                
                 if($result != "" && $httpcode == 200) {
                     $sql = "SELECT priv FROM users WHERE ID='$user_id'";
                     $result = mysqli_query($mysql_db, $sql); 
@@ -255,9 +256,17 @@ if (!empty($_POST))
             $password = md5($password);
             $email = filter_var($email, FILTER_SANITIZE_EMAIL);
             $priv = PLAYER;
-            //if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            //    die("-1");
-            //}
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                die("-1");
+            }
+            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE email='$email'");
+            $cnt = $result->num_rows;
+            if($cnt != 0) {
+                die ("-2");
+            } 
+            $emailcode = rand(1000000, 10000000);
+            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`,`avatar_path`) VALUES('$username', '$email','$emailcode','0', '$password','$priv','1','./assets/img/default.png')";
+            
             if($license != "" && $licensepwd != "") {
                 $url = "https://api.softworkz.com/v1/licenses/P0003024/".$license;
                 $data = array('licensepassword' => '$licensepwd', 'UserIp' => '10.10.10.10');
@@ -279,17 +288,14 @@ if (!empty($_POST))
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // On dev server only!
                 $result = curl_exec($ch);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 
-                $priv = PLAYER + CREATOR;
+                if($result != "" && $httpcode == 200) {
+                    $priv = PLAYER + CREATOR;
+                    $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`,`avatar_path`,`licenseid`,`licensepwd`) VALUES('$username', '$email','$emailcode','0', '$password','$priv','1','./assets/img/default.png','$licenseid','$licensepwd')";
+                }
             }
-
-            $result = mysqli_query($mysql_db, "SELECT * FROM users WHERE email='$email'");
-            $cnt = $result->num_rows;
-            if($cnt != 0) {
-                die ("-2");
-            }        
-            $emailcode = rand(1000000, 10000000);
-            $sql = "INSERT INTO users(username, email, emailcode, validated, pwd, priv,`status`,`avatar_path`) VALUES('$username', '$email','$emailcode','0', '$password','$priv','1','./assets/img/default.png')";
+            
             $result = mysqli_query($mysql_db, $sql);
             //die($sql);
             try {
@@ -309,7 +315,7 @@ if (!empty($_POST))
                 $mailer->Host = 'nesemutest.com';
                 $mailer->SMTPAuth = true;
                 $mailer->Username = 'retroverse@nesemutest.com';
-                $mailer->Password = 'G]_8c$jD4Tlw';
+                $mailer->Password = 'a].,jcs$~-kt';
                 $mailer->SMTPSecure = 'tls';
                 $mailer->Port = 587;
             
@@ -349,7 +355,7 @@ if (!empty($_POST))
                 $mailer->Host = 'nesemutest.com';
                 $mailer->SMTPAuth = true;
                 $mailer->Username = 'retroverse@nesemutest.com';
-                $mailer->Password = 'G]_8c$jD4Tlw';
+                $mailer->Password = 'a].,jcs$~-kt';
                 $mailer->SMTPSecure = 'tls';
                 $mailer->Port = 587;
             

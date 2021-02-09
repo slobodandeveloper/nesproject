@@ -139,7 +139,7 @@ else {
                 <h6 class="mb-0">New password</h6>
               </div>
               <div class="col-sm-9 text-secondary">
-              <input type='text' id='pwd' type='password' class='form-control default-theme'/>
+              <input id='pwd' type='password' class='form-control default-theme'/>
               </div>
             </div>
             <hr>
@@ -148,7 +148,7 @@ else {
                 <h6 class="mb-0">Confirm</h6>
               </div>
               <div class="col-sm-9 text-secondary">
-                <input type='text' id='confirm' type='password' class='form-control default-theme'/>
+                <input id='confirm' type='password' class='form-control default-theme'/>
               </div>
             </div>
           </div>

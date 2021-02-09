@@ -25,12 +25,16 @@
                 <input class="input100" type="password" id='confirm' name="confirm" >
                 <span class="focus-input100" data-placeholder="Confirm*"></span>
             </div>
-            <div class="wrap-input101 validate-input m-b-50" data-validate="Enter Password">
-                <input class="input101" type="text" id='license' name="license" >
+            <div >
+                <input type="checkbox" id='chk_creator'/> <label for='chk_creator' data-toggle="tooltip" data-placement="top" title="OPTIONAL: Join creators developing content for The Retroverse by becoming a part of the NESmaker community.  Make your own hardware playable NES game today!  Use your NESmaker credentials to add a CREATOR badge to your account and be able to upload your games!  www.TheNew8bitHeroes.com">Creator Access(optional)</label>
+               
+            </div><br>
+            <div class="wrap-input101 validate-input m-b-50" data-validate="Enter License Code" style='display:none'>
+                <input class="input101" type="text" id='license' name="license">
                 <span class="focus-input101" data-placeholder="Nesmaker License Code"></span>
             </div>
-            <div class="wrap-input101 validate-input m-b-50" data-validate="Enter Password">
-                <input class="input101" type="password" id='licensepwd' name="licensepwd" >
+            <div class="wrap-input101 validate-input m-b-50" data-validate="Enter License Password" style='display:none'>
+                <input class="input101" type="password" id='licensepwd' name="licensepwd">
                 <span class="focus-input101" data-placeholder="License password"></span>
             </div>
             <div class="wrap-input100 validate-input m-b-50" id='error_div' style='color:red; display:none'>
@@ -45,7 +49,15 @@
 </div>
 
 <script>
-    
+    $("#chk_creator").click(function() {
+        var chk = $("#chk_creator")[0].checked;
+        if(chk == true) {
+            $(".wrap-input101").fadeIn(100);
+        }
+        else {
+            $(".wrap-input101").fadeOut(100);
+        }
+    });
     $(".login100-form-btn").click(function(e) {
         var username = $("#username").val();
         var password = $("#password").val();
@@ -85,6 +97,8 @@
                }
         }}); 
     });
-    
+    $(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
 </script>
 <script src="./assets/js/loginformvalidate.js"></script>

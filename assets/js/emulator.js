@@ -1332,7 +1332,7 @@ window.emu = (function() {
             controllers[0] = 0;
             controllers[1] = 0;
             Mute();
-            //Pause();
+            Pause();
         };
         window.document.body.onfocus = function() {
             Unmute();

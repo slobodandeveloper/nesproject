@@ -44,7 +44,7 @@ $result = mysqli_query($mysql_db, $sql);
             <tbody id='main_table_body'>
             <?php
                 $no = 1;
-                $str1 = array(1=>"Administrator",2=>"Player",4=>"Pro Player",8=>"Player, Creator",16=>"ProPlayer, Creator");
+                $str1 = array(1=>"Administrator",2=>"Player",4=>"Pro Player",8=>"Creator",10=>"Player, Creator",12=>"ProPlayer, Creator");
                 $str2 = array(1=>"Normal",2=>"Banned");
 
                 while($row = $result->fetch_assoc()) {
